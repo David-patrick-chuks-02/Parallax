@@ -43,7 +43,6 @@ export function Landing() {
   const { state } = useApp();
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
-  const accepted = state.repos.filter(r => r.status === 'Verified');
   const escrowed = escrowedTotal(state.issues, state.applications);
   const paidOut = state.receipts.reduce((sum, r) => sum + r.amount, 0);
   const top = state.issues.slice().sort((a, b) => b.bounty - a.bounty).slice(0, 3);
@@ -333,7 +332,7 @@ export function Landing() {
         </div>
       </section>
 
-      <SpiralSection repos={accepted} />
+      <SpiralSection />
 
       {/* ----------------------------------------------------------- maintainers */}
       <section className="band alt">
@@ -394,7 +393,7 @@ export function Landing() {
         </div>
       </section>
 
-      <TeamSection repos={accepted} />
+      <TeamSection />
 
       {/* ------------------------------------------------------------------ faq */}
       <section className="band">

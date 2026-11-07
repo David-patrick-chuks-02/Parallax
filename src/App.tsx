@@ -8,8 +8,7 @@ import {
   Receipt, Settings, Sun, Wrench, X,
 } from 'lucide-react';
 import { Provider, useApp } from './lib/store';
-import { canOpenRepoDashboard, escrowedTotal, formatMoney, repoName, reposOwnedBy } from './lib/model';
-import { PLATFORM } from './lib/platform';
+import { canOpenRepoDashboard, repoName, reposOwnedBy } from './lib/model';
 import { Avatar, Brand, EASE } from './components/ui';
 import { GooeyNav } from './components/bits';
 import { Landing } from './pages/landing';
@@ -60,17 +59,15 @@ function ThemeToggle() {
 let announceDismissed = false;
 
 function AnnounceBar() {
-  const { state } = useApp();
   const [open, setOpen] = useState(!announceDismissed);
   if (!open) return null;
   const dismiss = () => { announceDismissed = true; setOpen(false); };
   return (
     <div className="announce">
       <Link className="announce-in" to="/explore">
-        <span className="announce-tag">New</span>
+        <span className="announce-tag">Demo</span>
         <span className="announce-text">
-          ${formatMoney(escrowedTotal(state.issues, state.applications))} {PLATFORM.asset} in escrow across{' '}
-          {state.issues.length} funded issues
+          Horizon Cash: Move money anywhere on Earth, powered by Blaaiz
         </span>
         <ArrowRight size={12} />
       </Link>
@@ -110,9 +107,9 @@ function PublicShell({ children }: { children: ReactNode }) {
   }, []);
 
   const nav = [
-    { to: '/explore', label: 'Explore', end: true },
-    { to: '/explore/repos', label: 'Repositories' },
-    { to: '/explore/orgs', label: 'Organizations' },
+    { to: '/explore', label: 'Try it', end: true },
+    { to: '/explore/repos', label: 'Features' },
+    { to: '/explore/orgs', label: 'How it works' },
   ];
 
   return (
@@ -125,7 +122,7 @@ function PublicShell({ children }: { children: ReactNode }) {
           <div className="navpill-nav"><GooeyNav items={nav} /></div>
           <div className="navpill-right">
             <ThemeToggle />
-            <Link className="btn sm" to="/maintainer/login">List your repo</Link>
+            <Link className="btn sm" to="/maintainer/login">Get Started</Link>
             {state.session.contributor ? (
               <Link className="btn sm navpill-cta" to="/me">
                 <Avatar name={state.session.contributor} />
@@ -158,7 +155,7 @@ function PublicShell({ children }: { children: ReactNode }) {
                     {n.label}
                   </NavLink>
                 ))}
-                <Link to="/maintainer/login">List your repo</Link>
+                <Link to="/maintainer/login">Get Started</Link>
               </div>
             </motion.nav>
           )}
@@ -296,10 +293,10 @@ function MaintainerShell({ children }: { children: ReactNode }) {
       title="Maintainer"
       sub={me}
       groups={[{
-        heading: 'Repositories',
+        heading: 'Payments',
         items: [
-          { to: '/maintainer', label: 'Your repositories', icon: FolderGit2, end: true, count: mine.length },
-          { to: '/maintainer/submit', label: 'Connect a repo', icon: LayoutGrid },
+          { to: '/maintainer', label: 'Your payments', icon: FolderGit2, end: true, count: mine.length },
+          { to: '/maintainer/submit', label: 'New payment', icon: LayoutGrid },
         ],
       }]}
       footer={<Link className="btn ghost sm block" to="/">Leave maintainer area</Link>}
@@ -322,7 +319,7 @@ function RepoShell({ children }: { children: ReactNode }) {
   const open = state.issues.filter(i => i.repoId === repo!.id).length;
   return (
     <WorkspaceShell
-      title="Repository"
+      title="Payment"
       sub={repoName(repo!)}
       groups={[{
         heading: repo!.name,

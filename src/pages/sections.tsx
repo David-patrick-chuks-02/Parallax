@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight, GitPullRequest, Send, Wallet } from 'lucide-react';
-import { formatCount, formatMoney, repoName, type Issue, type Repo } from '../lib/model';
-import { PLATFORM } from '../lib/platform';
+import { formatMoney, repoName, type Issue, type Repo } from '../lib/model';
 import { Avatar, Chip } from '../components/ui';
 import { AnimatedContent, BounceCards, CardSwap, InfiniteSpiral, ProfileCard } from '../components/bits';
 
@@ -37,12 +36,12 @@ export function LiveStackSection({ issues, repos }: { issues: Issue[]; repos: Re
       <div className="band-inner split-wide">
         <AnimatedContent>
           <div>
-            <h2 className="sec-h">The backlog, live</h2>
+            <h2 className="sec-h">Global payments, live</h2>
             <p className="muted band-copy">
-              Issues cycle through the queue as maintainers fund them. Every card carries its bounty
-              and acceptance criteria, and the money is already in escrow before anyone applies.
+              Send crypto, receive fiat in any currency. Real-time rates powered by Blaaiz.
+              Every transaction is transparent, with instant settlement and full escrow protection.
             </p>
-            <Link className="btn" to="/explore">Open the board<ArrowRight size={14} /></Link>
+            <Link className="btn" to="/explore">Try it now<ArrowRight size={14} /></Link>
           </div>
         </AnimatedContent>
         <AnimatedContent delay={0.1}>
@@ -56,9 +55,9 @@ export function LiveStackSection({ issues, repos }: { issues: Issue[]; repos: Re
 /** Three lifecycle cards that fan out on scroll. */
 export function FanSection() {
   const cards = [
-    { icon: Send, t: 'Apply', d: 'Send a short plan. No speculative pull requests.', tone: 'a' },
-    { icon: GitPullRequest, t: 'Build', d: 'One assignee per issue, reviewed against the criteria it was funded on.', tone: 'b' },
-    { icon: Wallet, t: 'Get paid', d: `Merge releases the bounty in ${PLATFORM.asset} straight to your ${PLATFORM.chain} address.`, tone: 'c' },
+    { icon: Send, t: 'Quote', d: 'Get real-time exchange rates with transparent fee breakdown. No surprises.', tone: 'a' },
+    { icon: GitPullRequest, t: 'Confirm', d: 'Review the details and submit. Payout is created in seconds with a trackable reference.', tone: 'b' },
+    { icon: Wallet, t: 'Settle', d: `Funds settle instantly. Escrow protection available for contracts and hiring.`, tone: 'c' },
   ];
   return (
     <section className="band alt">
@@ -66,8 +65,8 @@ export function FanSection() {
         <AnimatedContent>
           <div className="sec centered-sec">
             <div>
-              <h2>Three moves, start to paid</h2>
-              <p>No rounds to wait for, no pool to split, no negotiation over price.</p>
+              <h2>Three moves, quote to settled</h2>
+              <p>Real-time rates, instant settlement, full transparency powered by Blaaiz.</p>
             </div>
           </div>
         </AnimatedContent>
@@ -85,16 +84,25 @@ export function FanSection() {
   );
 }
 
-/** Repositories arranged on a rotating spiral. */
-export function SpiralSection({ repos }: { repos: Repo[] }) {
-  const items = repos.map(r => (
-    <Link className="spiral-chip" to={`/explore?q=${encodeURIComponent(r.name)}`} key={r.id} title={repoName(r)}>
-      <Avatar name={r.org} org={r.org} square />
+/** Payment corridors and supported methods. */
+export function SpiralSection() {
+  const items = [
+    { name: 'USDC', icon: '₿', desc: 'Crypto' },
+    { name: 'USDT', icon: '✦', desc: 'Crypto' },
+    { name: 'USD', icon: '$', desc: 'Bank' },
+    { name: 'EUR', icon: '€', desc: 'Bank' },
+    { name: 'NGN', icon: '₦', desc: 'Mobile' },
+    { name: 'GHS', icon: '₵', desc: 'Mobile' },
+    { name: 'KES', icon: 'KES', desc: 'Mobile' },
+    { name: 'ZAR', icon: 'R', desc: 'Bank' },
+  ].map(item => (
+    <div className="spiral-chip" key={item.name}>
+      <div style={{ width: '32px', height: '32px', background: 'var(--acc-soft)', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', fontWeight: 600 }}>{item.icon}</div>
       <span className="col" style={{ gap: 0, minWidth: 0 }}>
-        <span className="row-title">{r.name}</span>
-        <span className="row-sub">{formatCount(r.stars)} stars</span>
+        <span className="row-title">{item.name}</span>
+        <span className="row-sub">{item.desc}</span>
       </span>
-    </Link>
+    </div>
   ));
 
   return (
@@ -105,12 +113,12 @@ export function SpiralSection({ repos }: { repos: Repo[] }) {
         </AnimatedContent>
         <AnimatedContent>
           <div>
-            <h2 className="sec-h">One ecosystem, every layer</h2>
+            <h2 className="sec-h">50+ currencies, instant settlement</h2>
             <p className="muted band-copy">
-              Contracts, tooling, wallets and docs — any repository in the {PLATFORM.chain} ecosystem
-              can fund a single issue the day it needs doing, without waiting for a grant round.
+              Send crypto on any chain, receive fiat in your local currency. Supported across
+              multiple blockchains with transparent rates and instant settlement powered by Blaaiz.
             </p>
-            <Link className="btn" to="/explore/repos">See repositories<ArrowRight size={14} /></Link>
+            <Link className="btn" to="/explore">Try it now<ArrowRight size={14} /></Link>
           </div>
         </AnimatedContent>
       </div>
@@ -118,13 +126,13 @@ export function SpiralSection({ repos }: { repos: Repo[] }) {
   );
 }
 
-/** Sample contributors, as tilting holographic cards. */
-export function TeamSection({ repos }: { repos: Repo[] }) {
+/** Sample features. */
+export function TeamSection() {
   const team = [
-    { name: 'Nadia Osei', role: 'Soroban tooling', handle: '@nadia.dev', org: repos[0]?.org, stat: '14 receipts' },
-    { name: 'Kwame Owusu', role: 'CLI and RPC', handle: '@kwame-o', org: repos[1]?.org, stat: '9 receipts' },
-    { name: 'Lucía Marín', role: 'Wallets and signing', handle: '@lucia-m', org: repos[3]?.org, stat: '11 receipts' },
-    { name: 'Tobi Kalu', role: 'SDKs and types', handle: '@tobi.k', org: repos[2]?.org, stat: '7 receipts' },
+    { name: 'Instant Payout', role: 'Get paid in crypto', handle: 'USDC/USDT', org: 'Crypto', stat: 'Minutes' },
+    { name: 'Pay Abroad', role: 'Send across borders', handle: 'Any currency', org: 'Global', stat: '50+ pairs' },
+    { name: 'Escrow Safe', role: 'Hold funds securely', handle: 'Conditional release', org: 'Smart', stat: 'One-click' },
+    { name: 'Verified Rates', role: 'Real-time FX rates', handle: 'Transparent fees', org: 'Blaaiz', stat: 'No markup' },
   ];
 
   return (
@@ -133,8 +141,8 @@ export function TeamSection({ repos }: { repos: Repo[] }) {
         <AnimatedContent>
           <div className="sec centered-sec">
             <div>
-              <h2>Work that follows you</h2>
-              <p>Every paid bounty leaves a receipt, so a contributor's record travels with them.</p>
+              <h2>Features built for you</h2>
+              <p>Transparent, instant, and secure global payments powered by Blaaiz.</p>
             </div>
           </div>
         </AnimatedContent>
