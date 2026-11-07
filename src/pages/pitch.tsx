@@ -1,16 +1,14 @@
 import { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-// Parallax theme colors
+// Parallax theme colors - Purple & Black only
 const COLORS = {
-  violet: '#a78bfa',
-  fuchsia: '#f472b6',
-  orange: '#fb923c',
-  bg: '#09090b',
+  accent: '#a78bfa',     // Purple/Violet accent
+  bg: '#09090b',         // Pure black background
   card: 'rgba(255,255,255,.04)',
   border: 'rgba(255,255,255,.1)',
-  text: '#fafafa',
-  muted: '#a1a1aa',
+  text: '#fafafa',       // White text
+  muted: '#a1a1aa',      // Gray text
 };
 
 const SLIDES = [
@@ -111,7 +109,7 @@ export function Pitch() {
           top: 0,
           left: 0,
           height: '3px',
-          background: `linear-gradient(90deg, ${COLORS.violet}, ${COLORS.fuchsia}, ${COLORS.orange})`,
+          background: COLORS.accent,
           width: `${progress}%`,
           zIndex: 10,
           transition: 'width 0.4s ease',
@@ -166,7 +164,7 @@ export function Pitch() {
               width: '96px',
               height: '96px',
               borderRadius: '28%',
-              background: `linear-gradient(135deg, ${COLORS.violet}, ${COLORS.fuchsia}, ${COLORS.orange})`,
+              background: COLORS.accent,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -204,7 +202,7 @@ export function Pitch() {
                 width: '6px',
                 height: '6px',
                 borderRadius: '999px',
-                background: `linear-gradient(135deg, ${COLORS.violet}, ${COLORS.orange})`,
+                background: COLORS.accent,
               }}
             />
             {slide.label}
@@ -229,7 +227,7 @@ export function Pitch() {
                 {' '}
                 <span
                   style={{
-                    background: `linear-gradient(90deg, ${COLORS.violet}, ${COLORS.fuchsia}, ${COLORS.orange})`,
+                    background: COLORS.accent,
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent',
                     backgroundClip: 'text',
@@ -244,7 +242,7 @@ export function Pitch() {
                 {' '}
                 <span
                   style={{
-                    background: `linear-gradient(90deg, ${COLORS.violet}, ${COLORS.fuchsia}, ${COLORS.orange})`,
+                    background: COLORS.accent,
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent',
                     backgroundClip: 'text',
@@ -259,7 +257,7 @@ export function Pitch() {
                 {' '}
                 <span
                   style={{
-                    background: `linear-gradient(90deg, ${COLORS.violet}, ${COLORS.fuchsia}, ${COLORS.orange})`,
+                    background: COLORS.accent,
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent',
                     backgroundClip: 'text',
@@ -305,7 +303,7 @@ export function Pitch() {
                   textAlign: 'left',
                 }}
               >
-                <span style={{ fontSize: '14px', fontWeight: 700, color: COLORS.violet, flexShrink: 0 }}>{point.num}</span>
+                <span style={{ fontSize: '14px', fontWeight: 700, color: COLORS.accent, flexShrink: 0 }}>{point.num}</span>
                 <div>
                   <p style={{ margin: '0 0 2px', fontWeight: 600, fontSize: '16.5px' }}>{point.title}</p>
                   <p style={{ margin: 0, color: '#a1a1aa', fontSize: '14.5px', lineHeight: 1.45 }}>{point.desc}</p>
@@ -367,7 +365,7 @@ export function Pitch() {
                 alignItems: 'center',
                 gap: '8px',
                 padding: '14px 28px',
-                background: `linear-gradient(135deg, ${COLORS.violet}, ${COLORS.fuchsia})`,
+                background: COLORS.accent,
                 border: 'none',
                 borderRadius: '8px',
                 color: 'white',
