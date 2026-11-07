@@ -1,83 +1,75 @@
 import { useState, useEffect } from 'react';
-
-// Parallax brand colors - Purple & Black
-const COLORS = {
-  accent: '#a78bfa',
-  bg: '#09090b',
-  card: 'rgba(255,255,255,.04)',
-  border: 'rgba(255,255,255,.1)',
-  text: '#fafafa',
-  muted: '#a1a1aa',
-};
+import { Link } from 'react-router-dom';
+import { motion, AnimatePresence } from 'motion/react';
+import { ArrowRight, Send, TrendingUp, Zap, Check } from 'lucide-react';
+import { EASE } from '../components/ui';
+import { AnimatedContent, GradientText, StarBorder, Magnet, GlareHover } from '../components/bits';
 
 const SLIDES = [
   {
     id: 1,
     type: 'hero',
     title: 'Move money,',
-    highlight: 'anywhere.',
-    subtitle: 'Send crypto, get real FX rates, receive fiat instantly.',
-    meta: 'Parallax • Powered by Blaaiz',
+    highlight: 'anywhere on Earth.',
+    subtitle: 'Send crypto, get real FX rates, receive fiat instantly. Parallax is the payout tracker for global teams, freelancers, and remote hiring — powered end-to-end by Blaaiz.',
   },
   {
     id: 2,
     type: 'problem',
-    title: 'The Problem',
+    badge: 'The Problem',
+    title: 'Why crypto payouts are broken',
     points: [
-      '💸 Freelancers lose 5-10% converting crypto to local currency',
-      '🌍 International hiring has no trustless escrow',
-      '⏳ Cross-border payments take days, not minutes',
+      { icon: '💸', title: 'No clean off-ramp', desc: 'Exchanges charge 2-5%, have high minimums, and are slow. It\'s worse in emerging markets.' },
+      { icon: '🌍', title: 'No trustless escrow', desc: 'Clients and contractors have no way to secure payments — it\'s all faith or expensive intermediaries.' },
     ],
   },
   {
     id: 3,
     type: 'solution',
-    title: 'The Solution',
-    feature: 'Parallax',
-    points: [
-      'Real-time FX rates from Blaaiz',
-      'Multi-chain USDC/USDT support',
-      '50+ currency pairs',
-      'Transparent fees, instant settlement',
-    ],
+    badge: 'The Solution',
+    title: 'Parallax, powered by Blaaiz',
+    subtitle: 'Real infrastructure for real payouts. Live FX rates. Transparent fees. Instant settlement. Escrow protection.',
   },
   {
     id: 4,
     type: 'features',
-    title: 'Three Real Flows',
+    badge: 'Three Real Flows',
+    title: 'Three ways to move money',
     features: [
-      { icon: '💰', title: 'Instant Payout', desc: 'Get paid in crypto, withdraw in your local currency' },
-      { icon: '🌐', title: 'Pay Abroad', desc: 'Send USDC, recipient gets their currency automatically' },
-      { icon: '🔐', title: 'Escrow Hiring', desc: 'Secure payments until work is confirmed' },
+      { level: 'Instant Payout', blurb: 'Get paid in crypto or USD, cash out to your local currency via bank, mobile money, or ACH in minutes.' },
+      { level: 'Pay Abroad', blurb: 'Have USDC in Singapore, paying someone in Lagos? They receive NGN automatically. 50+ corridor pairs.' },
+      { level: 'Escrow for Hiring', blurb: 'Client funds the job in crypto. Parallax holds it secure until work is done, then one-click release.' },
     ],
   },
   {
     id: 5,
     type: 'tech',
+    badge: 'The Tech',
     title: 'Built on Blaaiz',
-    points: [
-      'Live FX Rates • No guesses, no markups',
-      'Transparent Fees • Shown before you confirm',
-      'Instant Settlement • Minutes, not days',
-      'Multi-chain • Ethereum, BSC, Polygon, Tron, Solana',
+    features: [
+      { icon: <TrendingUp size={18} />, title: 'Real FX Rates', desc: 'Live from Blaaiz API, updated constantly. No guesses, no markups.' },
+      { icon: <Check size={18} />, title: 'Transparent Fees', desc: 'See fees before you confirm. Full breakdown, no hidden charges.' },
+      { icon: <Zap size={18} />, title: 'Instant Settlement', desc: 'Minutes, not days. Real-time payout tracking.' },
+      { icon: <Send size={18} />, title: 'Multi-chain', desc: 'USDC/USDT from Ethereum, BSC, Polygon, Tron, Solana.' },
     ],
   },
   {
     id: 6,
     type: 'market',
-    title: 'Why Now?',
+    badge: 'Why Now?',
+    title: 'The market is ready',
     stats: [
       { num: '300M+', text: 'Freelancers need instant payouts' },
       { num: '$2T+', text: 'In remote salaries with no payment rails' },
-      { num: '100M+', text: 'Crypto holders wanting real-world use' },
+      { num: '100M+', text: 'Crypto holders seeking real-world use' },
     ],
   },
   {
     id: 7,
     type: 'cta',
-    title: 'Ready to move money?',
+    title: 'Create a payout,',
+    highlight: 'see it settle.',
     subtitle: 'Real Blaaiz integration. Real rates. Real global payouts.',
-    cta: 'Try Parallax',
   },
 ];
 
@@ -99,197 +91,8 @@ export function Pitch() {
     setCurrent((prev) => Math.max(0, Math.min(SLIDES.length - 1, prev + delta)));
   };
 
-  const renderSlide = () => {
-    switch (slide.type) {
-      case 'hero':
-        return (
-          <div style={{ textAlign: 'center', maxWidth: '800px' }}>
-            <div style={{ marginBottom: '32px' }}>
-              <div
-                style={{
-                  width: '80px',
-                  height: '80px',
-                  background: COLORS.accent,
-                  borderRadius: '16px',
-                  margin: '0 auto 24px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '40px',
-                  fontWeight: 800,
-                  color: COLORS.bg,
-                }}
-              >
-                P
-              </div>
-            </div>
-            <h1 style={{ fontSize: '64px', fontWeight: 800, margin: '0 0 16px', letterSpacing: '-0.02em' }}>
-              {slide.title} <span style={{ color: COLORS.accent }}>{slide.highlight}</span>
-            </h1>
-            <p style={{ fontSize: '18px', color: COLORS.muted, margin: '0 0 32px', lineHeight: 1.6 }}>
-              {slide.subtitle}
-            </p>
-            <p style={{ fontSize: '14px', color: COLORS.muted, letterSpacing: '0.05em', textTransform: 'uppercase' }}>
-              {slide.meta}
-            </p>
-          </div>
-        );
-
-      case 'problem':
-        return (
-          <div style={{ maxWidth: '700px' }}>
-            <h2 style={{ fontSize: '48px', fontWeight: 700, marginBottom: '40px' }}>{slide.title}</h2>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-              {slide.points?.map((point, i) => (
-                <div key={i} style={{ fontSize: '18px', color: COLORS.text, lineHeight: 1.6 }}>
-                  {point}
-                </div>
-              ))}
-            </div>
-          </div>
-        );
-
-      case 'solution':
-        return (
-          <div style={{ maxWidth: '700px', textAlign: 'center' }}>
-            <h2 style={{ fontSize: '48px', fontWeight: 700, marginBottom: '24px' }}>{slide.title}</h2>
-            <div
-              style={{
-                fontSize: '36px',
-                fontWeight: 800,
-                color: COLORS.accent,
-                marginBottom: '40px',
-              }}
-            >
-              {slide.feature}
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-              {slide.points?.map((point, i) => (
-                <div
-                  key={i}
-                  style={{
-                    padding: '16px',
-                    background: COLORS.card,
-                    border: `1px solid ${COLORS.border}`,
-                    borderRadius: '12px',
-                    fontSize: '14px',
-                    fontWeight: 600,
-                  }}
-                >
-                  {point}
-                </div>
-              ))}
-            </div>
-          </div>
-        );
-
-      case 'features':
-        return (
-          <div style={{ maxWidth: '800px' }}>
-            <h2 style={{ fontSize: '48px', fontWeight: 700, marginBottom: '40px', textAlign: 'center' }}>
-              {slide.title}
-            </h2>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '24px' }}>
-              {slide.features?.map((feature, i) => (
-                <div key={i} style={{ padding: '24px', background: COLORS.card, borderRadius: '16px', border: `1px solid ${COLORS.border}` }}>
-                  <div style={{ fontSize: '32px', marginBottom: '12px' }}>{feature.icon}</div>
-                  <h3 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '8px', color: COLORS.accent }}>
-                    {feature.title}
-                  </h3>
-                  <p style={{ fontSize: '14px', color: COLORS.muted, margin: 0 }}>{feature.desc}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        );
-
-      case 'tech':
-        return (
-          <div style={{ maxWidth: '700px', textAlign: 'center' }}>
-            <h2 style={{ fontSize: '48px', fontWeight: 700, marginBottom: '40px' }}>{slide.title}</h2>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              {slide.points?.map((point, i) => (
-                <div
-                  key={i}
-                  style={{
-                    padding: '16px',
-                    background: COLORS.card,
-                    border: `1px solid ${COLORS.border}`,
-                    borderRadius: '12px',
-                    fontSize: '15px',
-                    fontWeight: 500,
-                  }}
-                >
-                  {point}
-                </div>
-              ))}
-            </div>
-          </div>
-        );
-
-      case 'market':
-        return (
-          <div style={{ maxWidth: '700px', textAlign: 'center' }}>
-            <h2 style={{ fontSize: '48px', fontWeight: 700, marginBottom: '40px' }}>{slide.title}</h2>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '24px' }}>
-              {slide.stats?.map((stat, i) => (
-                <div key={i}>
-                  <div style={{ fontSize: '36px', fontWeight: 800, color: COLORS.accent, marginBottom: '8px' }}>
-                    {stat.num}
-                  </div>
-                  <div style={{ fontSize: '16px', color: COLORS.muted }}>{stat.text}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        );
-
-      case 'cta':
-        return (
-          <div style={{ maxWidth: '600px', textAlign: 'center' }}>
-            <h2 style={{ fontSize: '48px', fontWeight: 700, marginBottom: '16px' }}>{slide.title}</h2>
-            <p style={{ fontSize: '16px', color: COLORS.muted, marginBottom: '40px', lineHeight: 1.6 }}>
-              {slide.subtitle}
-            </p>
-            <a
-              href="/send"
-              style={{
-                display: 'inline-block',
-                padding: '14px 32px',
-                background: COLORS.accent,
-                color: COLORS.bg,
-                borderRadius: '8px',
-                fontSize: '16px',
-                fontWeight: 700,
-                textDecoration: 'none',
-                cursor: 'pointer',
-              }}
-            >
-              {slide.cta} →
-            </a>
-          </div>
-        );
-
-      default:
-        return null;
-    }
-  };
-
   return (
-    <div
-      style={{
-        minHeight: '100vh',
-        background: COLORS.bg,
-        color: COLORS.text,
-        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Inter, sans-serif',
-        overflow: 'hidden',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '60px 40px',
-      }}
-    >
+    <div style={{ minHeight: '100vh', background: 'var(--bg)', color: 'var(--text)', overflow: 'hidden' }}>
       {/* Progress bar */}
       <div
         style={{
@@ -297,7 +100,7 @@ export function Pitch() {
           top: 0,
           left: 0,
           height: '3px',
-          background: COLORS.accent,
+          background: 'linear-gradient(90deg, var(--acc), var(--acc))',
           width: `${progress}%`,
           zIndex: 10,
           transition: 'width 0.4s ease',
@@ -305,126 +108,216 @@ export function Pitch() {
       />
 
       {/* Navigation zones */}
-      <div
-        onClick={() => go(-1)}
-        style={{
-          position: 'fixed',
-          left: 0,
-          top: 0,
-          width: '20%',
-          height: '100%',
-          cursor: 'pointer',
-          zIndex: 5,
-        }}
-      />
-      <div
-        onClick={() => go(1)}
-        style={{
-          position: 'fixed',
-          right: 0,
-          top: 0,
-          width: '20%',
-          height: '100%',
-          cursor: 'pointer',
-          zIndex: 5,
-        }}
-      />
+      <div onClick={() => go(-1)} style={{ position: 'fixed', left: 0, top: 0, width: '20%', height: '100%', cursor: 'pointer', zIndex: 5 }} />
+      <div onClick={() => go(1)} style={{ position: 'fixed', right: 0, top: 0, width: '20%', height: '100%', cursor: 'pointer', zIndex: 5 }} />
 
       {/* Main content */}
-      <div style={{ maxWidth: '900px', width: '100%', animation: 'fadeIn 0.4s ease' }}>
-        {renderSlide()}
+      <div style={{ position: 'relative', minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '60px 40px' }}>
+        <AnimatePresence mode="wait">
+          <motion.div key={current} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.3, ease: EASE }} style={{ maxWidth: '900px', width: '100%' }}>
+            {slide.type === 'hero' && (
+              <div style={{ textAlign: 'center' }}>
+                <StarBorder className="hero-badge">
+                  <span className="hero-badge-in">
+                    <span className="dot-live" />
+                    Built on Blaaiz • Demo Mode
+                  </span>
+                </StarBorder>
+
+                <h1 className="hero-title" style={{ marginTop: '24px', marginBottom: '16px' }}>
+                  {slide.title} <GradientText>{slide.highlight}</GradientText>
+                </h1>
+
+                <p className="hero-sub" style={{ marginBottom: '40px' }}>
+                  {slide.subtitle}
+                </p>
+
+                <div className="row wrap hero-cta">
+                  <Magnet>
+                    <Link className="btn lg primary glow" to="/send">
+                      <GlareHover><span className="row" style={{ gap: 6 }}>Create payout<ArrowRight size={15} /></span></GlareHover>
+                    </Link>
+                  </Magnet>
+                  <Link className="btn lg" to="/explore">View payouts</Link>
+                </div>
+              </div>
+            )}
+
+            {slide.type === 'problem' && (
+              <div style={{ maxWidth: '700px', margin: '0 auto' }}>
+                <AnimatedContent>
+                  <div className="sec">
+                    <div>
+                      <div className="label" style={{ marginBottom: '12px' }}>
+                        <span className="dot-live" style={{ marginRight: '6px' }} />
+                        {slide.badge}
+                      </div>
+                      <h2 className="sec-h">{slide.title}</h2>
+                      <p className="muted band-copy">Why crypto payouts are broken for freelancers and teams.</p>
+                    </div>
+                  </div>
+                </AnimatedContent>
+
+                <div className="bento" style={{ marginTop: '40px' }}>
+                  {slide.points?.map((point, i) => (
+                    <AnimatedContent key={i} className="box w6" delay={i * 0.1}>
+                      <span style={{ fontSize: '28px', marginBottom: '12px', display: 'block' }}>{point.icon}</span>
+                      <h3>{point.title}</h3>
+                      <p>{point.desc}</p>
+                    </AnimatedContent>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {slide.type === 'solution' && (
+              <div style={{ maxWidth: '700px', margin: '0 auto', textAlign: 'center' }}>
+                <AnimatedContent>
+                  <div className="sec centered-sec">
+                    <div>
+                      <div className="label" style={{ marginBottom: '12px', justifyContent: 'center' }}>
+                        <span className="dot-live" style={{ marginRight: '6px' }} />
+                        {slide.badge}
+                      </div>
+                      <h2 className="sec-h">{slide.title}</h2>
+                      <p className="muted">{slide.subtitle}</p>
+                    </div>
+                  </div>
+                </AnimatedContent>
+              </div>
+            )}
+
+            {slide.type === 'features' && 'features' in slide && (
+              <div style={{ maxWidth: '900px', margin: '0 auto' }}>
+                <AnimatedContent>
+                  <div className="sec centered-sec">
+                    <div>
+                      <div className="label" style={{ marginBottom: '12px', justifyContent: 'center' }}>
+                        <span className="dot-live" style={{ marginRight: '6px' }} />
+                        {slide.badge}
+                      </div>
+                      <h2 className="sec-h">{slide.title}</h2>
+                    </div>
+                  </div>
+                </AnimatedContent>
+
+                <div className="bento" style={{ marginTop: '40px' }}>
+                  {slide.features?.map((f: any, i: number) => (
+                    <AnimatedContent key={i} className="box w2" delay={i * 0.07}>
+                      <span className="box-kicker">{f.level}</span>
+                      <span className="big-num acc">✓</span>
+                      <p>{f.blurb}</p>
+                    </AnimatedContent>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {slide.type === 'tech' && 'features' in slide && (
+              <div style={{ maxWidth: '900px', margin: '0 auto' }}>
+                <AnimatedContent>
+                  <div className="sec centered-sec">
+                    <div>
+                      <div className="label" style={{ marginBottom: '12px', justifyContent: 'center' }}>
+                        <span className="dot-live" style={{ marginRight: '6px' }} />
+                        {slide.badge}
+                      </div>
+                      <h2 className="sec-h">Built on Blaaiz</h2>
+                      <p className="muted">Real infrastructure for real payouts.</p>
+                    </div>
+                  </div>
+                </AnimatedContent>
+
+                <div className="bento" style={{ marginTop: '40px' }}>
+                  {slide.features?.map((f: any, i: number) => (
+                    <AnimatedContent key={i} className="box w2" delay={i * 0.07}>
+                      <span className="box-icon">{f.icon}</span>
+                      <h3>{f.title}</h3>
+                      <p>{f.desc}</p>
+                    </AnimatedContent>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {slide.type === 'market' && (
+              <div style={{ maxWidth: '700px', margin: '0 auto', textAlign: 'center' }}>
+                <AnimatedContent>
+                  <div className="sec centered-sec">
+                    <div>
+                      <div className="label" style={{ marginBottom: '12px', justifyContent: 'center' }}>
+                        <span className="dot-live" style={{ marginRight: '6px' }} />
+                        {slide.badge}
+                      </div>
+                      <h2 className="sec-h">{slide.title}</h2>
+                    </div>
+                  </div>
+                </AnimatedContent>
+
+                <div className="stats-row" style={{ marginTop: '40px' }}>
+                  {slide.stats?.map((stat, i) => (
+                    <AnimatedContent key={i} delay={i * 0.1}>
+                      <div className="stat">
+                        <div className="num" style={{ fontSize: '40px', fontWeight: 800 }}>{stat.num}</div>
+                        <div className="label" style={{ fontSize: '14px', color: 'var(--muted)', marginTop: '12px' }}>{stat.text}</div>
+                      </div>
+                    </AnimatedContent>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {slide.type === 'cta' && (
+              <div style={{ textAlign: 'center' }}>
+                <h1 className="cta-title" style={{ marginBottom: '16px' }}>
+                  {slide.title} <GradientText>{slide.highlight}</GradientText>
+                </h1>
+
+                <p className="muted" style={{ fontSize: '16px', marginBottom: '40px', maxWidth: '600px', margin: '16px auto 40px' }}>
+                  {slide.subtitle}
+                </p>
+
+                <div className="row wrap" style={{ justifyContent: 'center', gap: '16px' }}>
+                  <Magnet>
+                    <Link className="btn lg primary glow" to="/send">
+                      <GlareHover><span className="row" style={{ gap: 6 }}>Try Parallax<ArrowRight size={15} /></span></GlareHover>
+                    </Link>
+                  </Magnet>
+                  <Link className="btn lg" to="/">Back home</Link>
+                </div>
+              </div>
+            )}
+          </motion.div>
+        </AnimatePresence>
       </div>
 
-      {/* Navigation */}
-      <div
-        style={{
-          position: 'fixed',
-          bottom: '40px',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '24px',
-          zIndex: 6,
-        }}
-      >
+      {/* Navigation Controls */}
+      <div style={{ position: 'fixed', bottom: '40px', left: '50%', transform: 'translateX(-50%)', display: 'flex', alignItems: 'center', gap: '24px', zIndex: 6 }}>
         <button
           onClick={() => go(-1)}
-          style={{
-            background: COLORS.card,
-            border: `1px solid ${COLORS.border}`,
-            color: COLORS.text,
-            borderRadius: '50%',
-            width: '44px',
-            height: '44px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            cursor: 'pointer',
-            fontSize: '18px',
-          }}
+          style={{ background: 'var(--card)', border: '1px solid var(--border)', color: 'var(--text)', borderRadius: '8px', padding: '12px 16px', cursor: 'pointer', fontSize: '14px', fontWeight: 600 }}
         >
-          ←
+          ← Prev
         </button>
 
         <div style={{ display: 'flex', gap: '8px' }}>
           {SLIDES.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => setCurrent(i)}
-              style={{
-                width: i === current ? '24px' : '8px',
-                height: '8px',
-                borderRadius: '4px',
-                background: i === current ? COLORS.accent : COLORS.border,
-                border: 'none',
-                cursor: 'pointer',
-                transition: 'all 0.3s',
-              }}
-            />
+            <button key={i} onClick={() => setCurrent(i)} style={{ width: i === current ? '24px' : '8px', height: '8px', borderRadius: '4px', background: i === current ? 'var(--acc)' : 'var(--border)', border: 'none', cursor: 'pointer', transition: 'all 0.3s' }} />
           ))}
         </div>
 
         <button
           onClick={() => go(1)}
-          style={{
-            background: COLORS.card,
-            border: `1px solid ${COLORS.border}`,
-            color: COLORS.text,
-            borderRadius: '50%',
-            width: '44px',
-            height: '44px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            cursor: 'pointer',
-            fontSize: '18px',
-          }}
+          style={{ background: 'var(--card)', border: '1px solid var(--border)', color: 'var(--text)', borderRadius: '8px', padding: '12px 16px', cursor: 'pointer', fontSize: '14px', fontWeight: 600 }}
         >
-          →
+          Next →
         </button>
       </div>
 
       {/* Counter */}
-      <div
-        style={{
-          position: 'fixed',
-          top: '24px',
-          right: '24px',
-          fontSize: '14px',
-          color: COLORS.muted,
-          zIndex: 6,
-        }}
-      >
+      <div style={{ position: 'fixed', top: '24px', right: '24px', fontSize: '12px', color: 'var(--muted)', letterSpacing: '0.04em', zIndex: 6 }}>
         {current + 1} / {SLIDES.length}
       </div>
-
-      <style>{`
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(8px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
     </div>
   );
 }
