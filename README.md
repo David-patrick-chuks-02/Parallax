@@ -1,10 +1,10 @@
 <div align="center">
 
-<img src="logo.png" alt="Parallax" width="160" />
+<img src="logo.png" alt="Horizon Cash" width="160" />
 
-# Parallax
+# Horizon Cash
 
-**Per-issue bounties for open-source work, escrowed and settled on Stellar.**
+**Move money anywhere on Earth with instant crypto payouts, international transfers, and escrow protection. Powered by Blaaiz.**
 
 [![CI](https://github.com/zeemscript/parallax/actions/workflows/ci.yml/badge.svg)](https://github.com/zeemscript/parallax/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-a855f7.svg)](LICENSE)
@@ -22,31 +22,28 @@
 
 ## What it is
 
-Parallax lets a maintainer put a fixed **USDC** bounty on a single GitHub issue. The money is
-locked in a **Soroban escrow contract** when the issue is posted and released to the contributor
-the moment their pull request merges. Every payout emits a public **receipt**, so a contributor's
-record of shipped work travels with them from project to project.
+Horizon Cash is a global payments platform powered by **Blaaiz RaaS** that enables three core use cases:
+1. **Instant Crypto Payouts** — Receive USDC/USDT, withdraw in your local currency in minutes
+2. **Pay Abroad** — Send in any currency, receiver gets theirs automatically (50+ pairs)
+3. **Escrow for Hiring** — Client funds job in crypto, held safely in escrow, one-click release on completion
 
-Two views of the same work: maintainers see a backlog that gets done; contributors see money that
-is already there.
+Every transaction features transparent rates, real-time FX quotes, and built-in KYC compliance through Blaaiz's Signa flow.
 
 > [!NOTE]
-> **Status: testnet preview.** The escrow contract is deployed to Stellar testnet. The web app
-> still runs the full product flow on local browser data and does not call the contract yet, so no
-> real funds move. See the [roadmap](#roadmap).
+> **Status: Demo Preview.** The app runs the full product flow with real-time Blaaiz API quotes. No real funds are transacted in preview mode.
 
-## Why per-issue escrow
+## Why Horizon Cash
 
-| | Funding rounds | Parallax |
+| Feature | Traditional Banks | Horizon Cash |
 | --- | --- | --- |
-| Unit of funding | A pool for a time window | One issue |
-| Price | Points converted to a share of the pool later | Fixed bounty, known before you apply |
-| When money is committed | When the round is funded | When the issue is posted, in escrow |
-| When you are paid | When the round closes | When your pull request merges |
-| Record of work | Platform history | A public, on-chain receipt per payout |
+| Speed | 3-5 business days | Minutes |
+| Exchange Rates | Hidden spread/markup | Real-time, transparent |
+| Currencies | Limited pairs | 50+ currency pairs |
+| Cost | Hidden fees + spreads | Flat 2% or $0.50 |
+| Escrow | Expensive intermediaries | Built-in, one-click release |
+| Blockchain | Not supported | Multi-chain USDC/USDT |
 
-Parallax is a complement to grant programs, not a replacement. A project in a funding round can
-still put money on an urgent issue the day it needs doing.
+Horizon Cash is designed for freelancers, remote workers, and global teams who need instant, transparent cross-border payments.
 
 ## How it works
 
