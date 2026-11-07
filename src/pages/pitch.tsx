@@ -1,6 +1,18 @@
 import { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
+// Parallax theme colors
+const COLORS = {
+  violet: '#a78bfa',
+  fuchsia: '#f472b6',
+  orange: '#fb923c',
+  bg: '#09090b',
+  card: 'rgba(255,255,255,.04)',
+  border: 'rgba(255,255,255,.1)',
+  text: '#fafafa',
+  muted: '#a1a1aa',
+};
+
 const SLIDES = [
   {
     id: 1,
@@ -86,8 +98,8 @@ export function Pitch() {
     <div
       style={{
         minHeight: '100vh',
-        background: 'linear-gradient(135deg, #09090b 0%, #1a0f2e 100%)',
-        color: '#fafafa',
+        background: `linear-gradient(135deg, ${COLORS.bg} 0%, #1a0f2e 100%)`,
+        color: COLORS.text,
         fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Inter, sans-serif',
         overflow: 'hidden',
       }}
@@ -99,7 +111,7 @@ export function Pitch() {
           top: 0,
           left: 0,
           height: '3px',
-          background: 'linear-gradient(90deg, #a78bfa, #f472b6, #fb923c)',
+          background: `linear-gradient(90deg, ${COLORS.violet}, ${COLORS.fuchsia}, ${COLORS.orange})`,
           width: `${progress}%`,
           zIndex: 10,
           transition: 'width 0.4s ease',
@@ -154,7 +166,7 @@ export function Pitch() {
               width: '96px',
               height: '96px',
               borderRadius: '28%',
-              background: 'linear-gradient(135deg, #a78bfa, #f472b6, #fb923c)',
+              background: `linear-gradient(135deg, ${COLORS.violet}, ${COLORS.fuchsia}, ${COLORS.orange})`,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -179,9 +191,9 @@ export function Pitch() {
               fontWeight: 600,
               letterSpacing: '.06em',
               textTransform: 'uppercase',
-              color: '#a1a1aa',
-              background: 'rgba(255,255,255,.04)',
-              border: '1px solid rgba(255,255,255,.1)',
+              color: COLORS.muted,
+              background: COLORS.card,
+              border: `1px solid ${COLORS.border}`,
               padding: '7px 16px',
               borderRadius: '999px',
               marginBottom: '36px',
@@ -192,7 +204,7 @@ export function Pitch() {
                 width: '6px',
                 height: '6px',
                 borderRadius: '999px',
-                background: 'linear-gradient(135deg, #a78bfa, #fb923c)',
+                background: `linear-gradient(135deg, ${COLORS.violet}, ${COLORS.orange})`,
               }}
             />
             {slide.label}
@@ -217,7 +229,7 @@ export function Pitch() {
                 {' '}
                 <span
                   style={{
-                    background: 'linear-gradient(90deg, #a78bfa, #f472b6, #fb923c)',
+                    background: `linear-gradient(90deg, ${COLORS.violet}, ${COLORS.fuchsia}, ${COLORS.orange})`,
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent',
                     backgroundClip: 'text',
@@ -232,7 +244,7 @@ export function Pitch() {
                 {' '}
                 <span
                   style={{
-                    background: 'linear-gradient(90deg, #a78bfa, #f472b6, #fb923c)',
+                    background: `linear-gradient(90deg, ${COLORS.violet}, ${COLORS.fuchsia}, ${COLORS.orange})`,
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent',
                     backgroundClip: 'text',
@@ -247,7 +259,7 @@ export function Pitch() {
                 {' '}
                 <span
                   style={{
-                    background: 'linear-gradient(90deg, #a78bfa, #f472b6, #fb923c)',
+                    background: `linear-gradient(90deg, ${COLORS.violet}, ${COLORS.fuchsia}, ${COLORS.orange})`,
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent',
                     backgroundClip: 'text',
@@ -265,7 +277,7 @@ export function Pitch() {
           <p
             style={{
               fontSize: '23px',
-              color: '#a1a1aa',
+              color: COLORS.muted,
               lineHeight: 1.55,
               margin: '0 auto 24px',
               maxWidth: '760px',
@@ -285,15 +297,15 @@ export function Pitch() {
                 style={{
                   display: 'flex',
                   gap: '14px',
-                  border: '1px solid rgba(255,255,255,.1)',
-                  background: 'rgba(255,255,255,.04)',
+                  border: `1px solid ${COLORS.border}`,
+                  background: COLORS.card,
                   borderRadius: '16px',
                   padding: '18px 22px',
                   marginBottom: '16px',
                   textAlign: 'left',
                 }}
               >
-                <span style={{ fontSize: '14px', fontWeight: 700, color: '#a78bfa', flexShrink: 0 }}>{point.num}</span>
+                <span style={{ fontSize: '14px', fontWeight: 700, color: COLORS.violet, flexShrink: 0 }}>{point.num}</span>
                 <div>
                   <p style={{ margin: '0 0 2px', fontWeight: 600, fontSize: '16.5px' }}>{point.title}</p>
                   <p style={{ margin: 0, color: '#a1a1aa', fontSize: '14.5px', lineHeight: 1.45 }}>{point.desc}</p>
@@ -310,8 +322,8 @@ export function Pitch() {
               <div
                 key={c.title}
                 style={{
-                  border: '1px solid rgba(255,255,255,.1)',
-                  background: 'rgba(255,255,255,.04)',
+                  border: `1px solid ${COLORS.border}`,
+                  background: COLORS.card,
                   borderRadius: '22px',
                   padding: '26px',
                   textAlign: 'left',
@@ -331,8 +343,8 @@ export function Pitch() {
               <div
                 key={t.title}
                 style={{
-                  border: '1px solid rgba(255,255,255,.1)',
-                  background: 'rgba(255,255,255,.04)',
+                  border: `1px solid ${COLORS.border}`,
+                  background: COLORS.card,
                   borderRadius: '20px',
                   padding: '24px',
                   textAlign: 'left',
@@ -355,7 +367,7 @@ export function Pitch() {
                 alignItems: 'center',
                 gap: '8px',
                 padding: '14px 28px',
-                background: 'linear-gradient(135deg, #a78bfa, #f472b6)',
+                background: `linear-gradient(135deg, ${COLORS.violet}, ${COLORS.fuchsia})`,
                 border: 'none',
                 borderRadius: '8px',
                 color: 'white',
@@ -381,7 +393,7 @@ export function Pitch() {
           bottom: '22px',
           right: '28px',
           fontSize: '12px',
-          color: '#a1a1aa',
+          color: COLORS.muted,
           letterSpacing: '.04em',
           zIndex: 6,
         }}
@@ -409,7 +421,7 @@ export function Pitch() {
               width: '6px',
               height: '6px',
               borderRadius: '999px',
-              background: i === current ? '#fafafa' : 'rgba(255,255,255,.18)',
+              background: i === current ? COLORS.text : 'rgba(255,255,255,.18)',
               border: 'none',
               cursor: 'pointer',
               transform: i === current ? 'scale(1.3)' : 'scale(1)',
@@ -428,8 +440,8 @@ export function Pitch() {
           left: '20px',
           top: '50%',
           transform: 'translateY(-50%)',
-          background: 'rgba(255,255,255,.1)',
-          border: '1px solid rgba(255,255,255,.2)',
+          background: COLORS.border,
+          border: `1px solid ${COLORS.border}`,
           color: 'white',
           borderRadius: '50%',
           width: '44px',
@@ -451,8 +463,8 @@ export function Pitch() {
           right: '20px',
           top: '50%',
           transform: 'translateY(-50%)',
-          background: 'rgba(255,255,255,.1)',
-          border: '1px solid rgba(255,255,255,.2)',
+          background: COLORS.border,
+          border: `1px solid ${COLORS.border}`,
           color: 'white',
           borderRadius: '50%',
           width: '44px',
