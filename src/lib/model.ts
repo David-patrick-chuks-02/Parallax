@@ -43,13 +43,13 @@ export interface Application {
   applicant?: string;
 }
 
-/** Record of a released bounty. On-chain once the escrow contract lands; local in the preview. */
+/** Record of a payment. On-chain once integrated; local in the preview. */
 export interface Receipt {
   id: string;
   issueId: string;
   repoId: string;
   contributor: string;
-  /** Stellar address the payout was sent to, if the contributor had set one. */
+  /** Crypto wallet address the payout was sent to. */
   address: string | null;
   amount: number;
   pr: string;
@@ -65,7 +65,7 @@ export interface Session {
 export interface State {
   version: 1;
   session: Session;
-  /** The signed-in contributor's Stellar payout address. */
+  /** The signed-in contributor's crypto wallet address. */
   payoutAddress: string | null;
   repos: Repo[];
   issues: Issue[];
@@ -139,27 +139,27 @@ export function initialState(): State {
     payoutAddress: null,
     receipts: [],
     applications: [
-      { issueId: '842', applicant: 'nadia.dev', status: 'Applied', message: 'I maintain a deploy pipeline that hits this on flaky RPC nodes. Plan: persist the upload hash and pending transaction to a state file, detect it on the next run, and skip straight to instantiate. A test kills the process between the two steps.' },
-      { issueId: '842', applicant: 'kwame-o', status: 'Applied', message: 'Happy to take this on. I would land the state file and resume detection first so it reviews on its own, then wire the --resume flag and document how it interacts with --force.' },
-      { issueId: '215', applicant: 'lucia-m', status: 'Applied', message: 'Auth entry decoding is close to my day job. I will render the invoked contract, function and arguments for each entry, flag nested sub-invocations, and add fixtures for the common token flows.' },
-      { issueId: '301', applicant: 'tobi.k', status: 'Applied', message: 'I would add a discriminated union keyed on the operation type, keep the raw XDR available on every branch, and add type-level tests so the shape cannot regress silently.' },
+      { issueId: '842', applicant: 'nadia.dev', status: 'Applied', message: 'I have 3 years working with ACH integrations. My plan: integrate Stripe ACH Instant, add account type detection, and build end-to-end tests covering both personal and business accounts.' },
+      { issueId: '842', applicant: 'kwame-o', status: 'Applied', message: 'I can handle this. I would start with provider integration, then add account validation, test across regions, and document the setup flow clearly.' },
+      { issueId: '215', applicant: 'lucia-m', status: 'Applied', message: 'I work in fintech in Nigeria. I will implement carrier detection by parsing the number, build abstractions for each carrier API, and set up a test suite with real carriers.' },
+      { issueId: '301', applicant: 'tobi.k', status: 'Applied', message: 'I built Redis modules before. I will implement TTL-based caching with eviction, add cache headers to responses, and set up monitoring to track hit rates.' },
     ],
     repos: [
-      { id: 'js-sdk', org: 'stellar', name: 'js-stellar-sdk', description: 'JavaScript and TypeScript SDK for building transactions and talking to Horizon and Soroban RPC.', languages: ['TypeScript', 'JavaScript'], stars: 680, forks: 310, topics: ['sdk', 'typescript', 'horizon'], license: 'Apache-2.0', updated: '2026-09-30', status: 'Verified' },
-      { id: 'soroban-sdk', org: 'stellar', name: 'rs-soroban-sdk', description: 'Rust SDK for writing, testing and deploying Soroban smart contracts.', languages: ['Rust'], stars: 140, forks: 75, topics: ['soroban', 'rust', 'contracts'], license: 'Apache-2.0', updated: '2026-10-01', status: 'Verified' },
-      { id: 'cli', org: 'stellar', name: 'stellar-cli', description: 'Command line tool for building, deploying and invoking contracts on Stellar networks.', languages: ['Rust'], stars: 120, forks: 95, topics: ['cli', 'tooling', 'soroban'], license: 'Apache-2.0', updated: '2026-10-02', status: 'Verified' },
-      { id: 'freighter', org: 'stellar', name: 'freighter', description: 'Browser extension wallet for signing Stellar transactions and Soroban authorizations.', languages: ['TypeScript'], stars: 190, forks: 110, topics: ['wallet', 'extension', 'signing'], license: 'Apache-2.0', updated: '2026-09-28', status: 'Verified' },
-      { id: 'oz-stellar', org: 'OpenZeppelin', name: 'stellar-contracts', description: 'Audited building blocks for Soroban contracts: tokens, access control and upgrades.', languages: ['Rust'], stars: 90, forks: 40, topics: ['security', 'library', 'soroban'], license: 'MIT', updated: '2026-09-29', status: 'Verified' },
-      { id: 'docs', org: 'stellar', name: 'stellar-docs', description: 'Developer documentation for Stellar, Soroban and the surrounding tooling.', languages: ['MDX', 'TypeScript'], stars: 70, forks: 160, topics: ['docs', 'guides', 'tutorials'], license: 'Apache-2.0', updated: '2026-10-03', status: 'Verified' },
+      { id: 'usdc-usd', org: 'Blaaiz', name: 'USDC → USD Bank', description: 'Send USDC on Ethereum, BSC, or Polygon. Receive USD in US bank account.', languages: ['Crypto', 'Bank'], stars: 2450, forks: 890, topics: ['usdc', 'bank', 'instant'], license: 'MIT', updated: '2026-10-03', status: 'Verified' },
+      { id: 'usdt-ngn', org: 'Blaaiz', name: 'USDT → NGN Mobile', description: 'Send USDT on any chain. Receive Nigerian Naira via mobile money in minutes.', languages: ['Crypto', 'Mobile'], stars: 1680, forks: 620, topics: ['usdt', 'ngn', 'africa'], license: 'MIT', updated: '2026-10-02', status: 'Verified' },
+      { id: 'usdc-eur', org: 'Blaaiz', name: 'USDC → EUR Bank', description: 'Send USDC, receive EUR in European bank account or SEPA transfer.', languages: ['Crypto', 'Bank'], stars: 1890, forks: 540, topics: ['usdc', 'europe', 'sepa'], license: 'MIT', updated: '2026-10-01', status: 'Verified' },
+      { id: 'escrow-sdk', org: 'Blaaiz', name: 'Escrow Contracts', description: 'Smart contracts for conditional fund release. Perfect for hiring and freelance work.', languages: ['Solidity', 'Rust'], stars: 950, forks: 440, topics: ['escrow', 'contracts', 'hiring'], license: 'Apache-2.0', updated: '2026-09-30', status: 'Verified' },
+      { id: 'rate-api', org: 'Blaaiz', name: 'Real-time FX API', description: 'Live exchange rates, fee calculation, and quote generation for all supported corridors.', languages: ['TypeScript', 'Go'], stars: 1240, forks: 380, topics: ['api', 'rates', 'payments'], license: 'Apache-2.0', updated: '2026-09-29', status: 'Verified' },
+      { id: 'compliance', org: 'Blaaiz', name: 'KYC & Compliance', description: 'Automated KYC verification through Signa flow. AML checks and regulatory compliance.', languages: ['TypeScript', 'Python'], stars: 780, forks: 260, topics: ['kyc', 'compliance', 'aml'], license: 'MIT', updated: '2026-09-28', status: 'Verified' },
     ],
     issues: [
-      { id: '842', repoId: 'cli', title: 'Resume interrupted contract deploys', description: 'If the CLI is interrupted between uploading Wasm and instantiating the contract, the next run starts over. Persist progress so a deploy can resume where it stopped.', criteria: ['Record the uploaded Wasm hash and pending step locally.', 'Resume from the recorded step on the next run.', 'Cover it with a test that stops the process between steps.'], complexity: 'High', bounty: 900, created: '2026-10-02' },
-      { id: '215', repoId: 'freighter', title: 'Summarise Soroban auth entries before signing', description: 'The signing prompt shows raw authorization entries. Render the contract, function and arguments for each entry so people can see what they are approving.', criteria: ['Show contract, function and arguments for every entry.', 'Flag nested sub-invocations clearly.', 'Add fixtures for common token transfer flows.'], complexity: 'High', bounty: 1200, created: '2026-10-01' },
-      { id: '301', repoId: 'js-sdk', title: 'Type simulation results per operation', description: 'Simulation responses are typed loosely, so callers cast. Narrow the result type by operation so the compiler catches mistakes.', criteria: ['Model the result as a discriminated union by operation.', 'Keep the raw XDR available on every branch.', 'Add type tests covering each branch.'], complexity: 'Medium', bounty: 400, created: '2026-09-30' },
-      { id: '512', repoId: 'soroban-sdk', title: 'Add a test helper for asserting emitted events', description: 'Contract tests compare event vectors by hand. Add a helper that asserts an event was emitted with given topics and data, with a readable diff on failure.', criteria: ['Match on topics and data, ignoring unrelated events.', 'Print a readable diff when the assertion fails.', 'Document the helper with an example test.'], complexity: 'Medium', bounty: 450, created: '2026-09-29' },
-      { id: '77', repoId: 'oz-stellar', title: 'Document upgrade safety checks', description: 'The upgradeable module enforces checks that are not explained anywhere. Write a short guide covering what is checked and why.', criteria: ['List every check the upgrade path performs.', 'Show a failing and a passing example for each.', 'Link the guide from the module README.'], complexity: 'Trivial', bounty: 150, created: '2026-09-28' },
-      { id: '128', repoId: 'docs', title: 'Add a troubleshooting section to the local network quickstart', description: 'People running a local network hit the same few setup errors. Collect them in one troubleshooting section with fixes.', criteria: ['Cover the five most common setup errors.', 'Give a copy-paste fix for each.', 'Verify every fix against the current release.'], complexity: 'Trivial', bounty: 150, created: '2026-09-27' },
-      { id: '843', repoId: 'cli', title: 'Print the fee estimate before submitting', description: 'The CLI submits transactions without showing what they will cost. Print the simulated fee and ask for confirmation unless --yes is passed.', criteria: ['Show the simulated resource fee before submission.', 'Skip the prompt when --yes is passed.', 'Leave JSON output unchanged.'], complexity: 'Medium', bounty: 350, created: '2026-09-26' },
+      { id: '842', repoId: 'usdc-usd', title: 'Add instant ACH withdrawals', description: 'Enable users to receive USD via ACH in under 1 hour instead of the current 24-hour standard.', criteria: ['Integrate with ACH instant rail provider.', 'Support both business and personal accounts.', 'Display estimated arrival time before confirm.'], complexity: 'High', bounty: 2500, created: '2026-10-02' },
+      { id: '215', repoId: 'usdt-ngn', title: 'Add Airtime top-up as payout method', description: 'Allow recipients to receive Nigerian Airtime credit instead of cash. Direct top-up to any carrier.', criteria: ['Support MTN, Airtel, Glo, 9mobile.', 'Automatic carrier detection by phone number.', 'Real-time top-up confirmation.'], complexity: 'High', bounty: 1850, created: '2026-10-01' },
+      { id: '301', repoId: 'rate-api', title: 'Cache exchange rates with TTL', description: 'Cache FX rates for 30 seconds to reduce API calls while maintaining real-time accuracy.', criteria: ['Implement Redis cache with 30s TTL.', 'Fall back to API if cache miss.', 'Monitor cache hit rate.'], complexity: 'Medium', bounty: 1200, created: '2026-09-30' },
+      { id: '512', repoId: 'escrow-sdk', title: 'Add milestone-based escrow release', description: 'Allow escrow holders to set multiple milestones with conditional releases instead of all-or-nothing.', criteria: ['Support 2-5 sequential milestones.', 'Require approval for each release.', 'Log release history on-chain.'], complexity: 'High', bounty: 1950, created: '2026-09-29' },
+      { id: '77', repoId: 'compliance', title: 'Reduce KYC verification time to 5 minutes', description: 'Optimize document verification and liveness check to complete in under 5 minutes.', criteria: ['Parallel document and liveness checks.', 'Auto-pass low-risk profiles.', 'Average verification time < 5 mins.'], complexity: 'Medium', bounty: 950, created: '2026-09-28' },
+      { id: '128', repoId: 'usdc-eur', title: 'Add SEPA Instant support', description: 'Enable SEPA Instant transfers for EUR payouts (arrives within 10 seconds).', criteria: ['Integrate SEPA Instant provider.', 'Support all EU banks.', 'Show instant badge in UI.'], complexity: 'Medium', bounty: 1650, created: '2026-09-27' },
+      { id: '843', repoId: 'rate-api', title: 'Display historical rate chart', description: 'Show 7-day and 30-day rate history for each corridor so users see price trends.', criteria: ['Fetch historical rates from Blaaiz.', 'Render candlestick or line chart.', 'Allow date range selection.'], complexity: 'Medium', bounty: 980, created: '2026-09-26' },
     ],
   };
 }

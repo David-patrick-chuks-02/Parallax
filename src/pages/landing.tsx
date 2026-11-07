@@ -83,7 +83,7 @@ export function Landing() {
 
             <p className="hero-rotate">
               Built on{' '}
-              <RotatingText words={['Blaaiz', 'Stellar', 'Soroban', 'USDC']} />
+              <RotatingText words={['Blaaiz', 'Multi-Chain', 'Real-time FX', 'Secure Escrow']} />
             </p>
 
             <div className="row wrap hero-cta">
