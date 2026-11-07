@@ -9,10 +9,7 @@ import {
 import { Provider } from './lib/store';
 import { Brand, EASE } from './components/ui';
 import { GooeyNav } from './components/bits';
-import { Landing } from './pages/landing';
-import { Explore } from './pages/explore';
-import { Send } from './pages/send';
-import { Pitch } from './pages/pitch';
+import { routes } from './routes.config';
 
 /* ------------------------------------------------------------------ theme */
 
@@ -175,12 +172,11 @@ function Routed() {
 
   return (
     <Routes location={location} key={location.pathname}>
-      <Route path="/" element={<PublicShell><Landing /></PublicShell>} />
-      <Route path="/pitch" element={<Pitch />} />
-      <Route path="/send" element={<PublicShell><Send /></PublicShell>} />
-      <Route path="/explore" element={<PublicShell><Explore tab="payouts" /></PublicShell>} />
-      <Route path="/explore/corridors" element={<PublicShell><Explore tab="corridors" /></PublicShell>} />
-      <Route path="/explore/stats" element={<PublicShell><Explore tab="stats" /></PublicShell>} />
+      {routes.map((route) => {
+        const element = <route.element {...(route.props || {})} />;
+        const wrappedElement = route.layout === 'public' ? <PublicShell>{element}</PublicShell> : element;
+        return <Route key={route.path} path={route.path} element={wrappedElement} />;
+      })}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
