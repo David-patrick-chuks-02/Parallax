@@ -79,8 +79,8 @@ export const storageKey = 'parallax-preview-v1';
 export const suggestedBounty = (complexity: Complexity) =>
   ({ Trivial: 150, Medium: 400, High: 900 })[complexity];
 
-/** Stellar account IDs are a G followed by 55 base32 characters. */
-export const isStellarAddress = (value: string) => /^G[A-Z2-7]{55}$/.test(value);
+/** Crypto wallet address validation. */
+export const isStellarAddress = (value: string) => /^0x[a-fA-F0-9]{40}$|^G[A-Z2-7]{55}$/.test(value);
 
 export const shortAddress = (value: string) => `${value.slice(0, 4)}…${value.slice(-4)}`;
 
