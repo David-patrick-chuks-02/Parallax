@@ -1,200 +1,301 @@
 <div align="center">
 
-<img src="logo.png" alt="Horizon Cash" width="160" />
+# Parallax
 
-# Horizon Cash
+**Move money, anywhere on Earth.**
 
-**Move money anywhere on Earth with instant crypto payouts, international transfers, and escrow protection. Powered by Blaaiz.**
+Instant crypto payouts, international transfers, and escrow protection for freelancers, remote teams, and global hiring.
+Powered by **Blaaiz**.
 
-[![CI](https://github.com/zeemscript/parallax/actions/workflows/ci.yml/badge.svg)](https://github.com/zeemscript/parallax/actions/workflows/ci.yml)
+[![Deployed on Vercel](https://img.shields.io/badge/deployed-Vercel-blue)](https://the-parallaxx.vercel.app)
 [![License: MIT](https://img.shields.io/badge/license-MIT-a855f7.svg)](LICENSE)
-[![Built on Stellar](https://img.shields.io/badge/built%20on-Stellar-0b0a14.svg)](https://stellar.org)
-[![Soroban](https://img.shields.io/badge/contract-Soroban-a855f7.svg)](contracts/)
-[![Good first issues](https://img.shields.io/github/issues/zeemscript/parallax/complexity%3A%20trivial?label=good%20first%20issues&color=22c55e)](https://github.com/zeemscript/parallax/issues?q=is%3Aissue+is%3Aopen+label%3A%22complexity%3A+trivial%22)
+[![Built for The Build Hackathon](https://img.shields.io/badge/built%20for-The%20Build-purple)](https://thebuild.dev)
 
-[How it works](#how-it-works) · [Quick start](#quick-start) · [Architecture](docs/architecture.md) · [Contract](contracts/README.md) · [Roadmap](#roadmap) · [Contributing](CONTRIBUTING.md)
+[Live Demo](#-live-demo) · [What is Parallax](#what-is-parallax) · [Features](#-features) · [Tech Stack](#-tech-stack) · [Getting Started](#-getting-started)
 
 </div>
 
-<br />
+---
 
-<img src="docs/assets/landing.png" alt="Parallax landing page" />
+## 🚀 Live Demo
 
-## What it is
+- **Main app**: https://the-parallaxx.vercel.app
+- **Interactive pitch**: https://the-parallaxx.vercel.app/pitch
+- **Create payout**: https://the-parallaxx.vercel.app/send
+- **Explore payouts**: https://the-parallaxx.vercel.app/explore
 
-Horizon Cash is a global payments platform powered by **Blaaiz RaaS** that enables three core use cases:
-1. **Instant Crypto Payouts** — Receive USDC/USDT, withdraw in your local currency in minutes
-2. **Pay Abroad** — Send in any currency, receiver gets theirs automatically (50+ pairs)
-3. **Escrow for Hiring** — Client funds job in crypto, held safely in escrow, one-click release on completion
+---
 
-Every transaction features transparent rates, real-time FX quotes, and built-in KYC compliance through Blaaiz's Signa flow.
+## What is Parallax?
 
-> [!NOTE]
-> **Status: Demo Preview.** The app runs the full product flow with real-time Blaaiz API quotes. No real funds are transacted in preview mode.
+Parallax is a **global payments tracker** that makes cross-border payouts instant, transparent, and accessible. Built on **Blaaiz** infrastructure, it handles three core use cases:
 
-## Why Horizon Cash
+### 💰 Instant Crypto Payouts
+Freelancers receive USDC/USDT → instantly withdraw in their local currency (bank, mobile money, ACH) in minutes. No more bouncing between exchanges losing 5-10% at each step.
 
-| Feature | Traditional Banks | Horizon Cash |
+### 🌍 Pay Abroad  
+Send USDC from Singapore → recipient gets NGN in Lagos automatically. 50+ currency pairs with real-time FX rates and transparent 2% fees.
+
+### 🔐 Escrow for Hiring
+Client funds the job in crypto → Parallax holds it securely until work is confirmed → one-click release to freelancer. No faith, no expensive intermediaries.
+
+---
+
+## Why Parallax?
+
+| Feature | Traditional Banks | Parallax |
 | --- | --- | --- |
-| Speed | 3-5 business days | Minutes |
-| Exchange Rates | Hidden spread/markup | Real-time, transparent |
-| Currencies | Limited pairs | 50+ currency pairs |
-| Cost | Hidden fees + spreads | Flat 2% or $0.50 |
-| Escrow | Expensive intermediaries | Built-in, one-click release |
-| Blockchain | Not supported | Multi-chain USDC/USDT |
+| **Speed** | 3-5 business days | Minutes |
+| **Exchange Rate** | Hidden spread/markup | Live, transparent |
+| **Currencies** | Limited pairs | 50+ pairs |
+| **Fees** | Hidden charges | Flat 2% upfront |
+| **Escrow** | Expensive intermediaries | Built-in, one-click |
+| **Crypto** | Not supported | Multi-chain USDC/USDT |
 
-Horizon Cash is designed for freelancers, remote workers, and global teams who need instant, transparent cross-border payments.
+Designed for **freelancers**, **remote teams**, and **global hiring** who need instant, transparent international payments.
 
-## How it works
+---
 
-```mermaid
-sequenceDiagram
-    autonumber
-    actor M as Maintainer
-    participant E as Escrow contract
-    actor C as Contributor
-    M->>E: fund(repo, issue, amount)
-    Note over E: USDC locked against the issue
-    C->>M: Apply with a plan
-    M->>E: assign(id, contributor)
-    C->>M: Open pull request
-    M->>E: release(id, pull_request)
-    E->>C: USDC payout
-    Note over E: emits receipt(id, contributor, repo, issue, PR, amount)
+## 🎯 How It Works
+
+```
+Freelancer sends invoice
+    ↓
+Client funds in USDC/USDT
+    ↓
+Parallax fetches LIVE FX rate from Blaaiz
+    ↓
+Shows transparent fee breakdown (typically 2%)
+    ↓
+One click to confirm
+    ↓
+Funds arrive in local currency in minutes
 ```
 
-1. **Connect.** A maintainer connects a repository and verifies they maintain it. No dashboard
-   opens until that passes.
-2. **Fund.** The maintainer posts an issue with acceptance criteria and a bounty. The bounty is
-   locked in escrow.
-3. **Apply.** Contributors send a short plan. The maintainer assigns one; the others are declined
-   automatically.
-4. **Build.** The assignee opens a pull request.
-5. **Merge and release.** Merging releases the bounty to the contributor's Stellar address and
-   writes their receipt. Unpaid bounties can be refunded to the maintainer.
+---
 
-## Features
+## ✨ Features
 
-**For contributors**
-- Browse funded issues across every connected repository, with search, filters and sorting by bounty
-- See the escrowed amount and acceptance criteria before applying
-- Track assignments, submit a pull request, and collect a receipt for every payout
-- Set a Stellar payout address (validated as a real account id)
+### For Everyone
+- **Real rates**: Live FX from Blaaiz API, updated constantly. No guesses.
+- **Transparent fees**: See cost before confirming. Full breakdown.
+- **Real settlement**: Minutes, not days. Bank account, mobile money, or ACH.
+- **Escrow protection**: Funds held securely until conditions met.
+- **Multi-chain**: Send USDC/USDT from Ethereum, BSC, Polygon, Tron, Solana.
 
-**For maintainers**
-- A separate maintainer area, with a dashboard per verified repository
-- Post an issue and fund it in one step; complexity suggests a starting price
-- Pick one contributor per issue; the rest are declined automatically
-- Merge and release in one action; see escrowed and paid-out totals at a glance
+### Dashboard
+- **Create payouts**: Three flows (instant, abroad, escrow)
+- **Browse corridors**: 50+ currency pairs with live rates
+- **Track status**: See processing amount, settled amount, total volume
+- **Live stats**: Dashboard metrics at a glance
 
-**Escrow contract**
-- `fund`, `assign`, `release`, `refund` — one open bounty per issue
-- Only the maintainer who funded a bounty can move it
-- `receipt` events indexed by contributor address for a portable work history
+### Pitch Deck
+- **Interactive**: 7-slide presentation with Parallax branding
+- **Keyboard navigation**: Arrow keys + click support
+- **Professional**: Dark theme with gradient colors
+- **Accessible**: Live at `/pitch` for presentations
 
-<table>
-  <tr>
-    <td><img src="docs/assets/explore.png" alt="Explore funded issues" /></td>
-    <td><img src="docs/assets/maintainer.png" alt="Maintainer issue triage" /></td>
-  </tr>
-  <tr>
-    <td align="center"><sub>Explore funded issues</sub></td>
-    <td align="center"><sub>Maintainer triage and release</sub></td>
-  </tr>
-</table>
+---
 
-## Quick start
+## 🛠 Tech Stack
 
-**Web app** — Node.js 22+
+- **Frontend**: React 18 + TypeScript
+- **Build**: Vite
+- **Styling**: CSS-in-JS (inline) + CSS modules
+- **Animations**: Motion (Framer Motion)
+- **Icons**: Lucide React
+- **State**: React Context (useApp hook)
+- **Deployment**: Vercel (auto-deploy on push to `main`)
+- **Infrastructure**: Blaaiz API (rates, settlement, KYC)
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js 22+
+- npm or yarn
+
+### Installation
 
 ```bash
-git clone https://github.com/zeemscript/parallax.git
-cd parallax
+# Clone repo
+git clone https://github.com/David-patrick-chuks-02/Parallax.git
+cd Parallax
+
+# Install
 npm install
-npm run dev            # http://localhost:3000
+
+# Create .env (optional — demo works without it)
+cat > .env << EOF
+VITE_BLAAIZ_API_URL=https://api.blaaiz.com
+VITE_BLAAIZ_CLIENT_ID=
+VITE_BLAAIZ_CLIENT_SECRET=
+VITE_BLAAIZ_API_KEY=
+VITE_BLAAIZ_WALLET_ID=
+EOF
 ```
 
-**Contract** — Rust with the `wasm32v1-none` target, and the
-[Stellar CLI](https://developers.stellar.org/docs/tools/cli) 25.2+ to build the wasm
+### Development
 
 ```bash
-cd contracts
-cargo test
-stellar contract build
+# Start dev server
+npm run dev
+# Opens http://localhost:5173
 ```
 
-**Try the full flow locally**
+### Production
 
-1. Sign in at `/maintainer/login` with any handle and connect a repository, e.g. `you/demo`.
-2. Click **Simulate verification**, open the dashboard, and **Post an issue**.
-3. In another tab, sign in as a contributor at `/login` and apply to that issue.
-4. Back as the maintainer, **Assign** the proposal. As the contributor, **Submit PR**.
-5. As the maintainer, **Merge & release**. The receipt appears at `/me/receipts`.
+```bash
+# Build
+npm run build
 
-Settings → **Reset preview data** restores the sample data at any time.
+# Preview
+npm run preview
+```
 
-## Project structure
+---
+
+## 📁 Project Structure
 
 ```
-parallax/
+Parallax/
 ├── src/
+│   ├── pages/
+│   │   ├── landing.tsx        # Hero, features, FAQs
+│   │   ├── send.tsx           # Create payout form
+│   │   ├── explore.tsx        # Browse payouts, corridors, stats
+│   │   ├── pitch.tsx          # 7-slide interactive pitch
+│   │   └── sections.tsx       # Reusable landing sections
+│   ├── components/
+│   │   ├── ui.tsx             # Core UI components
+│   │   └── bits.tsx           # Animated/visual effects
 │   ├── lib/
-│   │   ├── platform.ts      # product name, chain, network, asset — all copy reads from here
-│   │   ├── model.ts         # types, pure helpers, the dashboard gate, seed data
-│   │   └── store.tsx        # app state in one React context, persisted to localStorage
-│   ├── pages/               # one file per surface: landing, explore, issue, contributor, maintainer
-│   ├── components/          # shared UI primitives and React Bits motion/WebGL effects
-│   └── App.tsx              # routes, public shell, workspace shells and route guards
-├── contracts/
-│   └── escrow/              # Soroban escrow contract and its tests
-├── scripts/
-│   └── smoke-test.mjs       # end-to-end test of every flow at five viewport widths
-└── docs/                    # architecture notes and screenshots
+│   │   ├── model.ts           # Data types & helpers
+│   │   ├── store.ts           # State management
+│   │   └── platform.ts        # Product config
+│   └── App.tsx                # Routes & shell
+├── pitch/
+│   ├── index.html             # Standalone pitch (HTML)
+│   └── README.md              # Pitch export guide
+├── .env                       # Blaaiz credentials (optional)
+├── vite.config.ts
+└── package.json
 ```
 
-Read [docs/architecture.md](docs/architecture.md) for how state, routing, the maintainer gate and
-the contract fit together.
+---
 
-## Testing
+## 🎨 Design System
 
-| Command | What it checks |
-| --- | --- |
-| `npm run build` | TypeScript typecheck and production build |
-| `npm run test:smoke -- http://localhost:3000` | End-to-end: every flow, 15 routes at 5 widths, no horizontal overflow |
-| `cargo test` (in `contracts/`) | Contract unit tests: payouts, refunds, double-pay, auth |
-| `cargo clippy --all-targets -- -D warnings` | Contract lints |
+**Colors**: Violet (#a78bfa) → Fuchsia (#f472b6) → Orange (#fb923c)
+**Theme**: Dark mode with semi-transparent cards
+**Logo**: Chat bubble with gradient (Parallax mark)
 
-CI runs all of these, plus the wasm build, on every pull request.
+---
 
-## Roadmap
+## 💾 Data Model
 
-- [x] Product flow in the browser: connect, fund, apply, assign, merge and release, receipts
-- [x] Soroban escrow contract with tests
-- [x] Deploy the contract to testnet — [#3](https://github.com/zeemscript/parallax/issues/3)
-- [ ] Connect Freighter for maintainers — [#2](https://github.com/zeemscript/parallax/issues/2)
-- [ ] Fund bounties on-chain from the dashboard — [#4](https://github.com/zeemscript/parallax/issues/4)
-- [ ] Read receipts from contract events — [#5](https://github.com/zeemscript/parallax/issues/5)
-- [ ] Top up an open bounty — [#6](https://github.com/zeemscript/parallax/issues/6)
-- [ ] Passkey smart wallets so contributors can get paid without a seed phrase
-- [ ] GitHub app: real sign-in, ownership verification, release triggered by the merge
+### Payout
+```typescript
+interface Payout {
+  id: string;                    // Unique ID
+  corridorId: string;            // e.g., "usdc-ngn"
+  amount: number;                // Send amount
+  fromCurrency: string;          // "USDC", "USDT", etc.
+  toCurrency: string;            // "USD", "NGN", "EUR", etc.
+  recipient: string;             // Recipient name/account
+  status: PayoutStatus;          // Draft | Confirmed | Processing | Settled | Failed
+  rate: number;                  // FX rate (1 from = X to)
+  fee: number;                   // Fee amount
+  receiveAmount: number;         // Recipient gets this
+  created: string;               // ISO date
+  settled?: string;              // When settled
+}
+```
 
-## Contributing
+---
 
-Contributions are welcome — Parallax is built to be worked on in small, well-scoped pieces. Pick
-an [open issue](https://github.com/zeemscript/parallax/issues), comment with a short plan, and
-wait to be assigned. Issues labelled `complexity: trivial` are a good place to start.
+## 🌐 Supported Corridors
 
-Read [CONTRIBUTING.md](CONTRIBUTING.md) for setup, checks and pull request guidelines, and the
-[Code of Conduct](CODE_OF_CONDUCT.md) before taking part. Report security issues privately as
-described in [SECURITY.md](SECURITY.md).
+**Send**: USDC, USDT (Ethereum, BSC, Polygon, Tron, Solana)
 
-## Data boundaries
+**Receive** (50+ currencies):
+- USD, EUR, GBP, CHF, CAD, AUD, NZD
+- NGN, GHS, KES, ZAR, UGX, TZS (Africa)
+- INR, PKR, BDT, PHP, IDR, THB, VND (Asia)
+- SAR, AED, KWD (Middle East)
+- MXN, ARS, BRL (Americas)
+- And 30+ more...
 
-The seeded repositories are **real, existing open-source projects** used as reference examples so
-the directory renders with genuine avatars. Their star counts, topics, issues and bounties are
-fixtures, and their presence here implies no affiliation with, or participation in, Parallax.
-Sample contributors (`nadia.dev`, `kwame-o`, `lucia-m`, `tobi.k`) are fictional.
+---
 
-## License
+## 🔗 Blaaiz Integration
 
-[MIT](LICENSE)
+Parallax uses **Blaaiz infrastructure**:
+- **Live FX Rates API** — Real-time quotes for all corridors
+- **Multi-Chain** — Accept USDC/USDT from any blockchain
+- **Settlement** — Instant release to banks, mobile money, ACH
+- **Escrow** — Secure conditional release of funds
+- **KYC/AML** — Built-in compliance via Blaaiz Signa
+
+---
+
+## 🎬 Pitch Deck
+
+Access the interactive 7-slide pitch:
+- **In app**: `/pitch` route
+- **Standalone**: `/pitch/index.html`
+- **Export**: Print to PDF (Cmd+P)
+
+Slides:
+1. Hero — Parallax, move money anywhere
+2. Problem — Why crypto payouts are broken
+3. Solution — Powered by Blaaiz
+4. Use cases — Three real flows
+5. Tech — Real infrastructure
+6. Market — Why now?
+7. Demo — Try it live
+
+---
+
+## 🚢 Deployment
+
+Deployed on **Vercel** with auto-deploy:
+- Production: https://the-parallaxx.vercel.app
+- Every push to `main` triggers build
+- Preview deployments for PRs
+
+---
+
+## 📝 Environment
+
+Create `.env` to add Blaaiz credentials:
+
+```env
+VITE_BLAAIZ_API_URL=https://api.blaaiz.com
+VITE_BLAAIZ_CLIENT_ID=your-id
+VITE_BLAAIZ_CLIENT_SECRET=your-secret
+VITE_BLAAIZ_API_KEY=your-key
+VITE_BLAAIZ_WALLET_ID=your-wallet
+```
+
+**Demo mode** works without credentials (uses mock data).
+
+---
+
+## 🤝 Contributing
+
+Built for **The Build Hackathon**. To extend:
+
+1. Create new page in `src/pages/`
+2. Add route to `src/App.tsx`
+3. Update data model in `src/lib/model.ts`
+4. Test locally: `npm run dev`
+5. Build: `npm run build`
+6. Push to trigger Vercel deploy
+
+---
+
+## 📄 License
+
+MIT — Built with ❤️ for The Build Hackathon
