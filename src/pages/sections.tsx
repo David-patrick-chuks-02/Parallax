@@ -131,7 +131,7 @@ export function TeamSection() {
     { name: 'Multi-chain', role: 'Any major network', handle: 'Flexible send', org: 'Crypto', stat: 'Anywhere' },
   ];
 
-  const ProfileCard = ({ name, role, handle, org, stat }: typeof features[0]) => (
+  const ProfileCard = ({ name, role, handle, stat }: typeof features[0]) => (
     <div style={{
       border: '1px solid var(--border)',
       background: 'var(--card)',

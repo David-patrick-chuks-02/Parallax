@@ -11,6 +11,7 @@ import { Brand, EASE } from './components/ui';
 import { GooeyNav } from './components/bits';
 import { Landing } from './pages/landing';
 import { Explore } from './pages/explore';
+import { Send } from './pages/send';
 
 /* ------------------------------------------------------------------ theme */
 
@@ -61,7 +62,7 @@ function AnnounceBar() {
       <Link className="announce-in" to="/explore">
         <span className="announce-tag">Demo</span>
         <span className="announce-text">
-          Horizon Cash: Move money anywhere on Earth, powered by Blaaiz
+          Parallax: Move money anywhere on Earth, powered by Blaaiz
         </span>
         <ArrowRight size={12} />
       </Link>
@@ -100,9 +101,9 @@ function PublicShell({ children }: { children: ReactNode }) {
   }, []);
 
   const nav = [
-    { to: '/explore', label: 'Try it', end: true },
-    { to: '/explore/repos', label: 'Features' },
-    { to: '/explore/orgs', label: 'How it works' },
+    { to: '/explore', label: 'Payouts', end: true },
+    { to: '/explore/corridors', label: 'Corridors' },
+    { to: '/explore/stats', label: 'Stats' },
   ];
 
   return (
@@ -174,9 +175,10 @@ function Routed() {
   return (
     <Routes location={location} key={location.pathname}>
       <Route path="/" element={<PublicShell><Landing /></PublicShell>} />
-      <Route path="/explore" element={<PublicShell><Explore tab="issues" /></PublicShell>} />
-      <Route path="/explore/repos" element={<PublicShell><Explore tab="repos" /></PublicShell>} />
-      <Route path="/explore/orgs" element={<PublicShell><Explore tab="orgs" /></PublicShell>} />
+      <Route path="/send" element={<PublicShell><Send /></PublicShell>} />
+      <Route path="/explore" element={<PublicShell><Explore tab="payouts" /></PublicShell>} />
+      <Route path="/explore/corridors" element={<PublicShell><Explore tab="corridors" /></PublicShell>} />
+      <Route path="/explore/stats" element={<PublicShell><Explore tab="stats" /></PublicShell>} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
