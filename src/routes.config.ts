@@ -9,7 +9,7 @@
  * - src/pages/explore/[tab].tsx → /explore/:tab
  */
 
-import type { ReactNode } from 'react';
+import type { ComponentType } from 'react';
 import { Landing } from './pages/index';
 import { Send } from './pages/send';
 import { Explore } from './pages/explore';
@@ -17,7 +17,7 @@ import { Pitch } from './pages/pitch';
 
 export interface RouteConfig {
   path: string;
-  element: (props: any) => ReactNode;
+  element: ComponentType<any>;
   layout?: 'public' | 'plain';
   props?: Record<string, any>;
 }

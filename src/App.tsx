@@ -173,7 +173,8 @@ function Routed() {
   return (
     <Routes location={location} key={location.pathname}>
       {routes.map((route) => {
-        const element = <route.element {...(route.props || {})} />;
+        const Component = route.element;
+        const element = <Component {...(route.props || {})} />;
         const wrappedElement = route.layout === 'public' ? <PublicShell>{element}</PublicShell> : element;
         return <Route key={route.path} path={route.path} element={wrappedElement} />;
       })}
