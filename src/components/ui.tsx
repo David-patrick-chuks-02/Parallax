@@ -56,7 +56,7 @@ export function Mark({ size = 13 }: { size?: number }) {
   );
 }
 
-export function Brand({ to = '/', label = 'Horizon Cash' }: { to?: string; label?: string }) {
+export function Brand({ to = '/', label = 'Parallax' }: { to?: string; label?: string }) {
   return (
     <Link to={to} className="brand" aria-label={`${label} home`}>
       <span className="brand-mark"><Mark /></span>

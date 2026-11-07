@@ -4,14 +4,14 @@
  */
 export const PLATFORM = {
   /** Product name. */
-  name: 'Horizon Cash',
+  name: 'Parallax',
   /** One-line positioning, used in the footer and auth screens. */
   tagline: 'Move money anywhere on Earth, powered by Blaaiz',
   /** How the chain is described in prose. */
   chain: 'Blaaiz',
   /** Network the escrow contract targets. The preview does not connect to it yet. */
   network: 'demo',
-  /** Bounty asset. */
+  /** Payout asset. */
   asset: 'USDC',
 } as const;
 
