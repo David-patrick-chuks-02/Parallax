@@ -155,6 +155,9 @@ function Routed() {
   const location = useLocation();
   const navigate = useNavigate();
 
+  console.log('[Parallax] Current path:', location.pathname);
+  console.log('[Parallax] Routes available:', routes.length);
+
   useEffect(() => { window.scrollTo(0, 0); }, [location.pathname]);
 
   // ⌘K / "/" jumps to explore search from anywhere public.
