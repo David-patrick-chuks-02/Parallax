@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
+
+// Pitch slide presentation for The Build hackathon
 import { ArrowRight, Send, TrendingUp, Zap, Check } from 'lucide-react';
 import { EASE } from '../components/ui';
 import { AnimatedContent, GradientText, StarBorder, Magnet, GlareHover } from '../components/bits';
