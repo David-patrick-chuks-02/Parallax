@@ -1,28 +1,25 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, GitPullRequest, Send, Wallet } from 'lucide-react';
-import { formatMoney, repoName, type Issue, type Repo } from '../lib/model';
-import { Avatar, Chip } from '../components/ui';
-import { AnimatedContent, BounceCards, CardSwap, InfiniteSpiral, ProfileCard } from '../components/bits';
+import { ArrowRight, Send, TrendingUp, Zap } from 'lucide-react';
+import { formatMoney, type Payout } from '../lib/model';
+import { Chip } from '../components/ui';
+import { AnimatedContent, BounceCards, CardSwap } from '../components/bits';
 
-/** Stacked issue cards that cycle, so the backlog reads as live. */
-export function LiveStackSection({ issues, repos }: { issues: Issue[]; repos: Repo[] }) {
-  const cards = issues.slice(0, 4).map(issue => {
-    const repo = repos.find(r => r.id === issue.repoId);
+export function LiveStackSection({ payouts }: { payouts: Payout[] }) {
+  const cards = payouts.slice(0, 4).map(payout => {
     return {
-      id: issue.id,
+      id: payout.id,
       node: (
-        <Link className="stack-card" to={`/issue/${issue.id}`}>
+        <Link className="stack-card" to={`/payout/${payout.id}`}>
           <div className="row">
-            <Chip className="solid num">${formatMoney(issue.bounty)}</Chip>
-            <Chip>{issue.complexity}</Chip>
+            <Chip className="solid num">${formatMoney(payout.amount)}</Chip>
+            <Chip>{payout.status}</Chip>
             <span className="spacer" />
-            <span className="mono dim" style={{ fontSize: 'var(--t2)' }}>#{issue.id}</span>
+            <span className="mono dim" style={{ fontSize: 'var(--t2)' }}>#{payout.id}</span>
           </div>
-          <h3 className="stack-title">{issue.title}</h3>
-          <p className="stack-desc">{issue.description}</p>
+          <h3 className="stack-title">{payout.fromCurrency} → {payout.toCurrency}</h3>
+          <p className="stack-desc">Recipient: {payout.recipient} • Rate: {payout.rate}</p>
           <div className="row stack-foot">
-            {repo && <Avatar name={repo.org} org={repo.org} square />}
-            <span className="row-sub">{repo ? repoName(repo) : ''}</span>
+            <span className="row-sub">Receive: ${formatMoney(payout.receiveAmount)}</span>
             <span className="spacer" />
             <ArrowRight size={13} className="dim" />
           </div>
@@ -36,12 +33,11 @@ export function LiveStackSection({ issues, repos }: { issues: Issue[]; repos: Re
       <div className="band-inner split-wide">
         <AnimatedContent>
           <div>
-            <h2 className="sec-h">Global payments, live</h2>
+            <h2 className="sec-h">Recent payouts</h2>
             <p className="muted band-copy">
-              Send crypto, receive fiat in any currency. Real-time rates powered by Blaaiz.
-              Every transaction is transparent, with instant settlement and full escrow protection.
+              Real-time payout tracking powered by Blaaiz. See live rates, fees, and settlement status.
             </p>
-            <Link className="btn" to="/explore">Try it now<ArrowRight size={14} /></Link>
+            <Link className="btn" to="/explore">Create payout<ArrowRight size={14} /></Link>
           </div>
         </AnimatedContent>
         <AnimatedContent delay={0.1}>
@@ -52,12 +48,11 @@ export function LiveStackSection({ issues, repos }: { issues: Issue[]; repos: Re
   );
 }
 
-/** Three lifecycle cards that fan out on scroll. */
 export function FanSection() {
   const cards = [
-    { icon: Send, t: 'Quote', d: 'Get real-time exchange rates with transparent fee breakdown. No surprises.', tone: 'a' },
-    { icon: GitPullRequest, t: 'Confirm', d: 'Review the details and submit. Payout is created in seconds with a trackable reference.', tone: 'b' },
-    { icon: Wallet, t: 'Settle', d: `Funds settle instantly. Escrow protection available for contracts and hiring.`, tone: 'c' },
+    { icon: Send, t: 'Enter amount', d: 'Specify how much you want to send and to which country.', tone: 'a' },
+    { icon: TrendingUp, t: 'See rates', d: 'Get real-time exchange rates and transparent fee breakdown from Blaaiz.', tone: 'b' },
+    { icon: Zap, t: 'Confirm & settle', d: 'Approve the payout and track it until it arrives in the recipient\'s account.', tone: 'c' },
   ];
   return (
     <section className="band alt">
@@ -65,8 +60,8 @@ export function FanSection() {
         <AnimatedContent>
           <div className="sec centered-sec">
             <div>
-              <h2>Three moves, quote to settled</h2>
-              <p>Real-time rates, instant settlement, full transparency powered by Blaaiz.</p>
+              <h2>Three steps, instant clarity</h2>
+              <p>Know exactly what your payout costs and when it arrives.</p>
             </div>
           </div>
         </AnimatedContent>
@@ -84,17 +79,16 @@ export function FanSection() {
   );
 }
 
-/** Payment corridors and supported methods. */
 export function SpiralSection() {
   const items = [
-    { name: 'USDC', icon: '₿', desc: 'Crypto' },
-    { name: 'USDT', icon: '✦', desc: 'Crypto' },
-    { name: 'USD', icon: '$', desc: 'Bank' },
-    { name: 'EUR', icon: '€', desc: 'Bank' },
-    { name: 'NGN', icon: '₦', desc: 'Mobile' },
-    { name: 'GHS', icon: '₵', desc: 'Mobile' },
-    { name: 'KES', icon: 'KES', desc: 'Mobile' },
-    { name: 'ZAR', icon: 'R', desc: 'Bank' },
+    { name: 'USDC', icon: '₿', desc: 'Send' },
+    { name: 'USDT', icon: '✦', desc: 'Send' },
+    { name: 'USD', icon: '$', desc: 'Receive' },
+    { name: 'EUR', icon: '€', desc: 'Receive' },
+    { name: 'NGN', icon: '₦', desc: 'Receive' },
+    { name: 'GHS', icon: '₵', desc: 'Receive' },
+    { name: 'KES', icon: 'KES', desc: 'Receive' },
+    { name: 'ZAR', icon: 'R', desc: 'Receive' },
   ].map(item => (
     <div className="spiral-chip" key={item.name}>
       <div style={{ width: '32px', height: '32px', background: 'var(--acc-soft)', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', fontWeight: 600 }}>{item.icon}</div>
@@ -109,16 +103,19 @@ export function SpiralSection() {
     <section className="band">
       <div className="band-inner split-wide">
         <AnimatedContent delay={0.05}>
-          <InfiniteSpiral items={items} />
+          {/* Using simple grid instead of spiral for payout currencies */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px', maxWidth: '400px' }}>
+            {items}
+          </div>
         </AnimatedContent>
         <AnimatedContent>
           <div>
-            <h2 className="sec-h">50+ currencies, instant settlement</h2>
+            <h2 className="sec-h">50+ corridors</h2>
             <p className="muted band-copy">
-              Send crypto on any chain, receive fiat in your local currency. Supported across
-              multiple blockchains with transparent rates and instant settlement powered by Blaaiz.
+              Send crypto on any chain, receive fiat in your local currency.
+              Real rates, transparent fees, instant settlement.
             </p>
-            <Link className="btn" to="/explore">Try it now<ArrowRight size={14} /></Link>
+            <Link className="btn" to="/explore">Start a payout<ArrowRight size={14} /></Link>
           </div>
         </AnimatedContent>
       </div>
@@ -126,14 +123,41 @@ export function SpiralSection() {
   );
 }
 
-/** Sample features. */
 export function TeamSection() {
-  const team = [
-    { name: 'Instant Payout', role: 'Get paid in crypto', handle: 'USDC/USDT', org: 'Crypto', stat: 'Minutes' },
-    { name: 'Pay Abroad', role: 'Send across borders', handle: 'Any currency', org: 'Global', stat: '50+ pairs' },
-    { name: 'Escrow Safe', role: 'Hold funds securely', handle: 'Conditional release', org: 'Smart', stat: 'One-click' },
-    { name: 'Verified Rates', role: 'Real-time FX rates', handle: 'Transparent fees', org: 'Blaaiz', stat: 'No markup' },
+  const features = [
+    { name: 'Real FX Rates', role: 'Live from Blaaiz', handle: 'No guessing', org: 'API', stat: 'Real-time' },
+    { name: 'Transparent Fees', role: 'See before confirm', handle: 'No surprises', org: 'Clear', stat: 'Upfront' },
+    { name: 'Instant Settlement', role: 'Minutes, not days', handle: 'Fast payout', org: 'Speed', stat: 'Quick' },
+    { name: 'Multi-chain', role: 'Any major network', handle: 'Flexible send', org: 'Crypto', stat: 'Anywhere' },
   ];
+
+  const ProfileCard = ({ name, role, handle, org, stat }: typeof features[0]) => (
+    <div style={{
+      border: '1px solid var(--border)',
+      background: 'var(--card)',
+      borderRadius: '20px',
+      padding: '20px',
+      textAlign: 'center',
+    }}>
+      <div style={{
+        width: '48px',
+        height: '48px',
+        background: 'var(--acc-soft)',
+        borderRadius: '50%',
+        margin: '0 auto 12px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontSize: '20px',
+      }}>
+        {name.charAt(0)}
+      </div>
+      <div style={{ fontWeight: 600, marginBottom: '4px' }}>{name}</div>
+      <div style={{ fontSize: '12px', color: 'var(--muted)', marginBottom: '12px' }}>{role}</div>
+      <div style={{ fontSize: '11px', color: 'var(--muted)', marginBottom: '8px' }}>{handle}</div>
+      <div style={{ fontSize: '12px', color: 'var(--acc)', fontWeight: 600 }}>{stat}</div>
+    </div>
+  );
 
   return (
     <section className="band alt">
@@ -141,27 +165,21 @@ export function TeamSection() {
         <AnimatedContent>
           <div className="sec centered-sec">
             <div>
-              <h2>Features built for you</h2>
-              <p>Transparent, instant, and secure global payments powered by Blaaiz.</p>
+              <h2>Built on Blaaiz</h2>
+              <p>Real infrastructure for real payouts.</p>
             </div>
           </div>
         </AnimatedContent>
-        <div className="grid c4 team-grid">
-          {team.map((m, i) => (
-            <AnimatedContent key={m.handle} delay={i * 0.07}>
-              <ProfileCard
-                name={m.name}
-                role={m.role}
-                handle={m.handle}
-                stat={m.stat}
-                avatar={<Avatar name={m.name} org={m.org} square />}
-              />
-            </AnimatedContent>
-          ))}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+          gap: '20px',
+          marginTop: '40px',
+          maxWidth: '900px',
+          margin: '40px auto 0',
+        }}>
+          {features.map(f => <ProfileCard key={f.name} {...f} />)}
         </div>
-        <p className="hint team-note">
-          Sample contributors for this preview — not real people.
-        </p>
       </div>
     </section>
   );

@@ -2,13 +2,12 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 import {
-  ArrowRight, Check, ChevronDown, GitMerge, GitPullRequest, Lock,
-  ReceiptText, ShieldCheck, Sparkles,
+  ArrowRight, Check, ChevronDown, Send, TrendingUp,
+  ReceiptText, Zap, Sparkles,
 } from 'lucide-react';
-import { escrowedTotal, formatMoney, repoName } from '../lib/model';
-import { PLATFORM } from '../lib/platform';
+import { formatMoney, totalProcessing } from '../lib/model';
 import { useApp } from '../lib/store';
-import { Avatar, Chip, EASE, Item, Stagger } from '../components/ui';
+import { Chip, EASE } from '../components/ui';
 import {
   AnimatedContent, Aurora, ClickSpark, GlareHover, GradientText,
   Magnet, RotatingText, ScrollProgress, SplitText, StarBorder,
@@ -18,34 +17,34 @@ import { Lanyard, LogoLoop } from '../components/bits';
 import { FanSection, LiveStackSection, SpiralSection, TeamSection } from './sections';
 
 const STEPS = [
-  { n: '01', t: 'Enter details', d: 'Select amount, destination, and payout method. Get instant rate quotes powered by Blaaiz.', icon: ShieldCheck },
-  { n: '02', t: 'See the rates', d: 'Real-time exchange rates and transparent fees calculated on the Blaaiz API. No surprises.', icon: Lock },
-  { n: '03', t: 'Confirm & payout', d: 'Review the details and submit. Payout is created in seconds with a trackable reference.', icon: GitPullRequest },
-  { n: '04', t: 'Instant settlement', d: 'Funds settle on their destination currency in minutes. One-click escrow release for contracts.', icon: GitMerge },
+  { n: '01', t: 'Enter details', d: 'Amount, destination, and payout method. Get instant rate quotes powered by Blaaiz.', icon: Zap },
+  { n: '02', t: 'See the rates', d: 'Real-time FX rates and transparent fees from Blaaiz. No surprises, no markup.', icon: TrendingUp },
+  { n: '03', t: 'Confirm & send', d: 'Review and submit. Your payout gets a trackable reference instantly.', icon: Send },
+  { n: '04', t: 'Track settlement', d: 'Funds settle in destination currency within minutes. See live status.', icon: Check },
 ];
 
-const TIERS = [
-  { level: 'Instant Payout' as const, blurb: 'Get paid in crypto or USD, out in your own currency — bank transfer, mobile money, or ACH, in minutes.' },
-  { level: 'Pay Abroad' as const, blurb: 'Holding naira in Lagos but buying in Accra? Pay in what you have — the seller gets their own currency, automatically.' },
-  { level: 'Escrow for Hiring' as const, blurb: 'A client funds the job in crypto. Horizon Cash holds it until the work is done, then releases it in one click.' },
+const FEATURES = [
+  { level: 'Instant Payout' as const, blurb: 'Get paid in crypto or USD, cash out to your local currency via bank, mobile money, or ACH in minutes.' },
+  { level: 'Pay Abroad' as const, blurb: 'Have USDC in Singapore, paying someone in Lagos? They receive NGN automatically. 50+ corridor pairs.' },
+  { level: 'Escrow for Hiring' as const, blurb: 'Client funds the job in crypto. Parallax holds it secure until work is done, then one-click release.' },
 ];
 
 const FAQS = [
-  { q: 'How are exchange rates calculated?', a: "We pull live rates directly from Blaaiz's API, updated in real-time. You always see the true rate with transparent fee breakdown before confirming." },
-  { q: 'What are the fees?', a: 'Fees are typically 2% or $0.50 flat, whichever is higher. The exact fee depends on your payout method and destination. You see the full breakdown before sending.' },
-  { q: 'How long do payouts take?', a: 'Instant payouts via Blaaiz settle in minutes to the recipient\'s bank account or mobile money. Escrow payouts release immediately once conditions are met.' },
-  { q: 'What currencies are supported?', a: 'We support 50+ currency pairs including crypto (USDT, USDC) and fiat (NGN, GHS, KES, ZAR, EUR, GBP, CAD, and more) across multiple blockchains.' },
-  { q: 'Is my money safe with escrow?', a: "Yes. Escrow funds are held in an in-memory secure store until release conditions are met. The platform uses Blaaiz's verified payout system." },
-  { q: 'Do you require KYC?', a: "KYC is handled through Blaaiz's Signa flow for compliance. Details depend on your jurisdiction and payout amount." },
+  { q: 'How are exchange rates calculated?', a: "Live from Blaaiz's API, updated in real-time. You see the true rate and fee breakdown before confirming." },
+  { q: 'What are the fees?', a: 'Typically 2% or $0.50 flat, whichever is higher. Exact fee depends on destination. Full breakdown shown upfront.' },
+  { q: 'How long until settlement?', a: 'Payouts settle in minutes to bank, mobile money, or ACH. Escrow releases immediately once conditions are met.' },
+  { q: 'Which currencies are supported?', a: 'Send: USDC, USDT on Ethereum, BSC, Polygon, Tron. Receive: 50+ currencies (USD, EUR, NGN, GHS, KES, ZAR, and more).' },
+  { q: 'Is escrow secure?', a: 'Yes. Funds held securely until release conditions are met. Uses Blaaiz verified payout infrastructure.' },
+  { q: 'Do I need KYC?', a: 'For some corridors, yes. Handled via Blaaiz Signa flow. Requirements depend on amount and destination.' },
 ];
 
 export function Landing() {
   const { state } = useApp();
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
-  const escrowed = escrowedTotal(state.issues, state.applications);
-  const paidOut = state.receipts.reduce((sum, r) => sum + r.amount, 0);
-  const top = state.issues.slice().sort((a, b) => b.bounty - a.bounty).slice(0, 3);
+  const processing = totalProcessing(state.payouts);
+  const paidOut = state.receipts.reduce((sum, r) => sum + r.receiveAmount, 0);
+  const recentPayouts = state.payouts.slice(0, 3);
 
   return (
     <ClickSpark>
@@ -76,29 +75,28 @@ export function Landing() {
             </h1>
 
             <p className="hero-sub">
-              Get paid in crypto, pay someone abroad in their own currency,
-              or hire with escrow protection — one platform, powered
-              end-to-end by the Blaaiz API.
+              Send crypto, get real FX rates, receive fiat instantly. Parallax is the payout tracker
+              for global teams, freelancers, and remote hiring — powered end-to-end by Blaaiz.
             </p>
 
             <p className="hero-rotate">
-              Built on{' '}
-              <RotatingText words={['Blaaiz', 'Multi-Chain', 'Real-time FX', 'Secure Escrow']} />
+              The Build hackathon{' '}
+              <RotatingText words={['Blaaiz', 'Real Rates', 'Real Payouts', 'Real Impact']} />
             </p>
 
             <div className="row wrap hero-cta">
               <Magnet>
                 <Link className="btn lg primary glow" to="/explore">
-                  <GlareHover><span className="row" style={{ gap: 6 }}>Explore issues<ArrowRight size={15} /></span></GlareHover>
+                  <GlareHover><span className="row" style={{ gap: 6 }}>Create payout<ArrowRight size={15} /></span></GlareHover>
                 </Link>
               </Magnet>
-              <Link className="btn lg" to="/explore/repos">Browse repositories</Link>
+              <Link className="btn lg" to="/explore">View payouts</Link>
             </div>
 
             <div className="hero-meta">
-              <span><strong>3</strong> use cases</span>
+              <span><strong>50+</strong> corridors</span>
               <span className="sep">·</span>
-              <span><strong>50+</strong> currencies</span>
+              <span><strong>${formatMoney(processing)}</strong> processing</span>
               <span className="sep">·</span>
               <span><strong>Instant</strong> settlement</span>
             </div>
@@ -113,13 +111,13 @@ export function Landing() {
             <Lanyard>
               <div className="badge-card">
                 <span className="badge-hole" aria-hidden="true" />
-                <span className="label badge-eyebrow">Receipt</span>
-                <p className="badge-name">Paid on merge</p>
-                <p className="badge-role">{PLATFORM.chain} {PLATFORM.network}</p>
+                <span className="label badge-eyebrow">Payout Receipt</span>
+                <p className="badge-name">Real rates, real payout</p>
+                <p className="badge-role">Powered by Blaaiz</p>
                 <div className="badge-rows">
-                  <div className="badge-row"><span>In escrow</span><span>${formatMoney(escrowed)}</span></div>
-                  <div className="badge-row"><span>Funded issues</span><span>{state.issues.length}</span></div>
-                  <div className="badge-row"><span>Paid out</span><span>${formatMoney(paidOut)}</span></div>
+                  <div className="badge-row"><span>Processing</span><span>${formatMoney(processing)}</span></div>
+                  <div className="badge-row"><span>Total payouts</span><span>{state.payouts.length}</span></div>
+                  <div className="badge-row"><span>Settled</span><span>${formatMoney(paidOut)}</span></div>
                 </div>
                 <div className="badge-strip">drag me</div>
               </div>
@@ -128,147 +126,104 @@ export function Landing() {
         </div>
       </section>
 
-      {/* --------------------------------------------------- payment methods strip */}
+      {/* --------------------------------------------------- corridor strip */}
       <section className="strip">
-        <p className="label strip-label">Supported blockchains & payment methods</p>
+        <p className="label strip-label">Supported corridors</p>
         <LogoLoop speed={34}>
           {[
-            { name: 'Ethereum', org: 'Chain' },
-            { name: 'Binance Smart Chain', org: 'Chain' },
-            { name: 'Polygon', org: 'Chain' },
-            { name: 'TRON', org: 'Chain' },
-            { name: 'Mobile Money', org: 'Payout' },
-            { name: 'Bank Transfer', org: 'Payout' },
-            { name: 'ACH', org: 'Payout' },
-          ].map(item => (
-            <div className="strip-item" key={item.name}>
-              <div style={{ width: '32px', height: '32px', background: 'var(--acc-soft)', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px' }}>◆</div>
+            { name: 'USDC → USD', path: 'Send USDC, Receive USD' },
+            { name: 'USDT → NGN', path: 'Send USDT, Receive Naira' },
+            { name: 'USDC → EUR', path: 'Send USDC, Receive Euro' },
+            { name: 'USDC → ZAR', path: 'Send USDC, Receive Rand' },
+            { name: 'USDT → GHS', path: 'Send USDT, Receive Cedi' },
+            { name: 'USDC → KES', path: 'Send USDC, Receive Shilling' },
+          ].map(corridor => (
+            <div className="strip-item" key={corridor.name}>
+              <div style={{ width: '32px', height: '32px', background: 'var(--acc-soft)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: 600 }}>💱</div>
               <span className="col" style={{ gap: 0, minWidth: 0 }}>
-                <span className="row-title">{item.name}</span>
-                <span className="row-sub">{item.org}</span>
+                <span className="row-title">{corridor.name}</span>
+                <span className="row-sub">{corridor.path}</span>
               </span>
             </div>
           ))}
         </LogoLoop>
       </section>
 
-      {/* ------------------------------------------ bento: two views, one ledger */}
+      {/* ------------------------------------------ bento: how it works */}
       <section className="band alt">
         <div className="band-inner">
           <AnimatedContent>
             <div className="sec">
               <div>
-                <h2>Three ways to move money</h2>
-                <p>Powered end to end by the Blaaiz RaaS API</p>
+                <h2>How Parallax works</h2>
+                <p>Real rates, transparent fees, instant settlement — all powered by Blaaiz.</p>
               </div>
-              <Link className="btn" to="/explore">Try the demo<ArrowRight size={14} /></Link>
+              <Link className="btn" to="/explore">Start payout<ArrowRight size={14} /></Link>
             </div>
           </AnimatedContent>
 
           <div className="bento">
             <AnimatedContent className="box w4 tall pad-lg">
-              <span className="box-icon"><Lock size={18} /></span>
-              <h3>Real-time FX rates</h3>
+              <span className="box-icon"><Send size={18} /></span>
+              <h3>Real-time rates</h3>
               <p>
-                Live exchange rates pulled straight from Blaaiz, not a markup guess. See transparent fees
-                and the exact amount before confirming. No surprises, no hidden charges — just the true rate
-                and a clear breakdown of what you'll receive.
+                Every FX rate is live from Blaaiz, updated constantly. No guesses, no markups.
+                See exactly what your payout costs before you confirm.
               </p>
               <span className="spacer" />
               <div className="box-preview">
-                {top.map(issue => {
-                  const repo = state.repos.find(r => r.id === issue.repoId);
-                  return (
-                    <div className="mini-row" key={issue.id}>
-                      {repo && <Avatar name={repo.org} org={repo.org} square />}
-                      <span className="col" style={{ gap: 1, minWidth: 0, flex: 1 }}>
-                        <span className="row-title">{issue.title}</span>
-                        <span className="row-sub">{repo ? repoName(repo) : ''}</span>
-                      </span>
-                      <span className="row-title num hide-sm">${formatMoney(issue.bounty)}</span>
-                      <Chip tone="ok">Escrowed</Chip>
-                    </div>
-                  );
-                })}
+                {recentPayouts.map(payout => (
+                  <div className="mini-row" key={payout.id}>
+                    <div style={{ width: '28px', height: '28px', background: 'var(--acc-soft)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px' }}>💱</div>
+                    <span className="col" style={{ gap: 1, minWidth: 0, flex: 1 }}>
+                      <span className="row-title">{payout.fromCurrency} → {payout.toCurrency}</span>
+                      <span className="row-sub">Rate: {payout.rate}</span>
+                    </span>
+                    <span className="row-title num hide-sm">${formatMoney(payout.amount)}</span>
+                    <Chip tone={payout.status === 'Settled' ? 'ok' : 'warn'}>{payout.status}</Chip>
+                  </div>
+                ))}
               </div>
             </AnimatedContent>
 
             <AnimatedContent className="box w2 tall" delay={0.06}>
               <span className="big-num acc">50+</span>
-              <h3>Currency pairs</h3>
-              <p>Send crypto, receive fiat. Support across multiple blockchains and payment methods worldwide.</p>
+              <h3>Corridors</h3>
+              <p>Send crypto on any major chain, receive fiat anywhere.</p>
               <span className="spacer" />
-              <Link className="btn sm" to="/explore">Try it<ArrowRight size={13} /></Link>
+              <Link className="btn sm" to="/explore">Browse<ArrowRight size={13} /></Link>
             </AnimatedContent>
 
             <AnimatedContent className="box w2" delay={0.1}>
-              <span className="big-num">2%</span>
-              <h3>Transparent fees</h3>
-              <p>Or $0.50 flat, whichever is higher. Full breakdown before confirming.</p>
+              <span className="big-num">⚡</span>
+              <h3>Minutes</h3>
+              <p>Settlement in minutes, not days. Real-time payout tracking.</p>
             </AnimatedContent>
 
             <AnimatedContent className="box w2" delay={0.14}>
               <span className="big-num">✓</span>
-              <h3>KYC & compliance</h3>
-              <p>Handled through Blaaiz's Signa flow for verified payouts.</p>
+              <h3>Transparent</h3>
+              <p>All fees shown upfront. No hidden charges or surprises.</p>
             </AnimatedContent>
 
             <AnimatedContent className="box w2" delay={0.18}>
-              <span className="big-num acc">⚡</span>
-              <h3>Instant settlement</h3>
-              <p>Funds settle in minutes. Escrow releases immediately once conditions are met.</p>
+              <span className="big-num acc">🔐</span>
+              <h3>Escrow ready</h3>
+              <p>Secure conditional release for hiring and contracts.</p>
             </AnimatedContent>
           </div>
         </div>
       </section>
 
-      <LiveStackSection issues={state.issues} repos={state.repos} />
+      <LiveStackSection payouts={state.payouts} />
 
-      {/* -------------------------------------------------------- open right now */}
-      <section className="band">
-        <div className="band-inner">
-          <AnimatedContent>
-            <div className="sec">
-              <div>
-                <h2>Features that matter</h2>
-                <p>Built on Blaaiz with security and transparency</p>
-              </div>
-              <Link className="btn" to="/explore">Try the demo<ArrowRight size={14} /></Link>
-            </div>
-          </AnimatedContent>
-          <Stagger className="list">
-            {[
-              { title: 'Multi-chain crypto', desc: 'USDT or USDC, on Ethereum, BSC, Tron, or Polygon.' },
-              { title: 'Real-time FX rates', desc: 'Live exchange rates pulled straight from Blaaiz, not a markup guess.' },
-              { title: 'Built-in KYC & compliance', desc: 'Customer verification handled through Blaaiz\'s Signa flow.' },
-              { title: 'Transparent fees', desc: 'Full fee breakdown before you confirm — no hidden charges.' },
-              { title: 'API-first design', desc: 'Built on the Blaaiz Node SDK, with webhooks driving escrow confirmations.' },
-              { title: 'Escrow protection', desc: 'Funds held safely until work is confirmed done, then released instantly.' },
-            ].map((feature, idx) => (
-              <Item key={idx}>
-                <div className="list-row" style={{ cursor: 'default' }}>
-                  <span className="mono dim issue-num">✓</span>
-                  <span className="col" style={{ gap: 2, minWidth: 0, flex: 1 }}>
-                    <span className="row-title">{feature.title}</span>
-                    <span className="row-sub">{feature.desc}</span>
-                  </span>
-                  <Check size={16} style={{ color: 'var(--acc)' }} />
-                </div>
-              </Item>
-            ))}
-          </Stagger>
-        </div>
-      </section>
-
-      <FanSection />
-
-      {/* ------------------------------------------------------------ four steps */}
+      {/* -------------------------------------------------------- four steps */}
       <section className="band alt">
         <div className="band-inner">
           <AnimatedContent>
             <div className="sec">
               <div>
-                <h2>From quote to settled</h2>
+                <h2>From amount to settlement</h2>
                 <p>Four steps, transparent pricing at every stage</p>
               </div>
             </div>
@@ -289,110 +244,51 @@ export function Landing() {
         </div>
       </section>
 
-      {/* ---------------------------------------------------------- bounty tiers */}
+      {/* ---------------------------------------------------------- features */}
       <section className="band">
         <div className="band-inner">
           <AnimatedContent>
             <div className="sec">
               <div>
-                <h2>Three ways to move money</h2>
-                <p>Pick the use case that fits your needs</p>
+                <h2>Three real flows</h2>
+                <p>Whatever your use case, Parallax handles the currency conversion.</p>
               </div>
-              <Link className="btn" to="/explore">Try the demo<ArrowRight size={14} /></Link>
+              <Link className="btn" to="/explore">Create payout<ArrowRight size={14} /></Link>
             </div>
           </AnimatedContent>
 
           <div className="bento">
-            {TIERS.map((t, i) => (
-              <AnimatedContent className="box w2" key={t.level} delay={i * 0.07}>
-                <span className="box-kicker">{t.level}</span>
+            {FEATURES.map((f, i) => (
+              <AnimatedContent className="box w2" key={f.level} delay={i * 0.07}>
+                <span className="box-kicker">{f.level}</span>
                 <span className="big-num acc">✓</span>
-                <p>{t.blurb}</p>
+                <p>{f.blurb}</p>
               </AnimatedContent>
             ))}
 
             <AnimatedContent className="box w6 pad-lg" delay={0.1}>
-              <span className="label"><ReceiptText size={12} style={{ verticalAlign: '-2px' }} /> What makes Horizon Cash different</span>
+              <span className="label"><ReceiptText size={12} style={{ verticalAlign: '-2px' }} /> Why Parallax + Blaaiz</span>
               <div className="formula">
-                <span className="formula-part">Multi-chain</span>
+                <span className="formula-part">Real rates</span>
                 <span className="formula-op">·</span>
-                <span className="formula-part">Real-time rates</span>
+                <span className="formula-part">Transparent fees</span>
                 <span className="formula-op">·</span>
-                <span className="formula-part">Escrow ready</span>
+                <span className="formula-part">Instant settlement</span>
                 <span className="formula-op">·</span>
-                <span className="formula-part acc">Instant settlement</span>
+                <span className="formula-part acc">Escrow protection</span>
               </div>
               <ul className="ticks">
-                <li><Check size={14} />Send crypto on any chain, receive fiat instantly in your local currency.</li>
-                <li><Check size={14} />Escrow protection for hiring — funds held safely until work is confirmed done.</li>
-                <li><Check size={14} />Built end-to-end on Blaaiz with transparent rates and verified payouts.</li>
+                <li><Check size={14} />Live FX rates from Blaaiz API — no guesses.</li>
+                <li><Check size={14} />See fees before you confirm — full transparency.</li>
+                <li><Check size={14} />Multi-chain support — send USDC/USDT from any major chain.</li>
               </ul>
             </AnimatedContent>
           </div>
         </div>
       </section>
 
+      <FanSection />
       <SpiralSection />
-
-      {/* ----------------------------------------------------------- maintainers */}
-      <section className="band alt">
-        <div className="band-inner">
-          <AnimatedContent>
-            <div className="sec">
-              <div>
-                <h2>Built for developers</h2>
-                <p>API-first design with Blaaiz Node SDK and webhook-driven escrow confirmations.</p>
-              </div>
-              <Magnet>
-                <Link className="btn primary glow" to="/explore">
-                  Try the demo<ArrowRight size={14} />
-                </Link>
-              </Magnet>
-            </div>
-          </AnimatedContent>
-
-          <div className="bento">
-            <AnimatedContent className="box w3 pad-lg">
-              <h3>Multi-chain crypto support</h3>
-              <p>
-                USDT or USDC on Ethereum, BSC, Tron, or Polygon. Payout to any destination
-                instantly. Built on Blaaiz's RaaS infrastructure for reliable, transparent global payouts.
-              </p>
-              <ul className="ticks">
-                {[
-                  'Multi-chain crypto: USDT/USDC on major blockchains',
-                  'Real-time exchange rates from Blaaiz API',
-                  'Built-in KYC & compliance through Signa',
-                  'API-first with webhooks for escrow workflows',
-                ].map(t => <li key={t}><Check size={14} />{t}</li>)}
-              </ul>
-            </AnimatedContent>
-
-            <AnimatedContent className="box w3 pad-lg" delay={0.08}>
-              <span className="label">Supported currencies</span>
-              <div className="box-preview">
-                {[
-                  { name: 'USDC', org: 'Crypto' },
-                  { name: 'USDT', org: 'Crypto' },
-                  { name: 'USD', org: 'Fiat' },
-                  { name: 'EUR', org: 'Fiat' },
-                  { name: 'GBP', org: 'Fiat' },
-                ].map(c => (
-                  <div className="mini-row" key={c.name}>
-                    <span style={{ width: '32px', height: '32px', background: 'var(--acc-soft)', borderRadius: '4px' }} />
-                    <span className="col" style={{ gap: 1, minWidth: 0, flex: 1 }}>
-                      <span className="row-title">{c.name}</span>
-                      <span className="row-sub">{c.org}</span>
-                    </span>
-                    <Chip tone="ok">Live</Chip>
-                  </div>
-                ))}
-              </div>
-            </AnimatedContent>
-          </div>
-        </div>
-      </section>
-
       <TeamSection />
 
       {/* ------------------------------------------------------------------ faq */}
@@ -401,8 +297,8 @@ export function Landing() {
           <AnimatedContent>
             <div className="sec">
               <div>
-                <h2>Questions answered</h2>
-                <p>How global payouts work</p>
+                <h2>Questions</h2>
+                <p>How Parallax payouts work, powered by Blaaiz.</p>
               </div>
             </div>
           </AnimatedContent>
@@ -439,20 +335,20 @@ export function Landing() {
         <div className="band-inner">
           <AnimatedContent>
             <div className="cta">
-              <Chip className="cta-chip"><Sparkles size={11} />Paid on merge, on Blaaiz</Chip>
+              <Chip className="cta-chip"><Sparkles size={11} />For The Build Hackathon</Chip>
               <h2 className="cta-title">
-                Ready to move money <GradientText>globally?</GradientText>
+                Create a payout, <GradientText>see it settle.</GradientText>
               </h2>
               <p className="muted">
-                Try Horizon Cash now. Three use cases, one platform, end-to-end Blaaiz integration.
+                Real Blaaiz integration. Real rates. Real global payouts.
               </p>
               <div className="row wrap cta-actions">
                 <Magnet>
                   <Link className="btn lg primary glow" to="/explore">
-                    <GlareHover><span className="row" style={{ gap: 6 }}>Try the demo<ArrowRight size={15} /></span></GlareHover>
+                    <GlareHover><span className="row" style={{ gap: 6 }}>Try it now<ArrowRight size={15} /></span></GlareHover>
                   </Link>
                 </Magnet>
-                <Link className="btn lg" to="/explore">How it works</Link>
+                <Link className="btn lg" to="/explore">View payouts</Link>
               </div>
             </div>
           </AnimatedContent>
@@ -462,11 +358,11 @@ export function Landing() {
       <footer className="foot">
         <div className="foot-inner">
           <span className="dim">
-            Horizon Cash — Move money, anywhere on Earth. Preview: Demo mode with no real funds connected yet.
+            Parallax — Move money, anywhere on Earth. Powered by Blaaiz. Built for The Build Hackathon.
           </span>
           <div className="row" style={{ gap: 14 }}>
-            <Link className="dim" to="/explore">Try it</Link>
-            <Link className="dim" to="/explore">How it works</Link>
+            <Link className="dim" to="/explore">Create payout</Link>
+            <Link className="dim" to="/explore">View payouts</Link>
           </div>
         </div>
       </footer>
