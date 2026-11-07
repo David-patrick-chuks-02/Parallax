@@ -116,10 +116,10 @@ export function Pitch() {
       {/* Main content */}
       <div style={{ position: 'relative', minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '60px 40px' }}>
         <AnimatePresence mode="wait">
-          <motion.div key={current} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.3, ease: EASE }} style={{ maxWidth: '900px', width: '100%' }}>
+          <motion.div key={current} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.3, ease: EASE }} style={{ maxWidth: '900px', width: '100%', textAlign: 'center', margin: '0 auto' }}>
             {slide.type === 'hero' && (
-              <div style={{ textAlign: 'center' }}>
-                <StarBorder className="hero-badge">
+              <div style={{ textAlign: 'center', width: '100%' }}>
+                <StarBorder className="hero-badge" style={{ justifyContent: 'center', margin: '0 auto 24px' }}>
                   <span className="hero-badge-in">
                     <span className="dot-live" />
                     Built on Blaaiz • Demo Mode
@@ -130,11 +130,11 @@ export function Pitch() {
                   {slide.title} <GradientText>{slide.highlight}</GradientText>
                 </h1>
 
-                <p className="hero-sub" style={{ marginBottom: '40px' }}>
+                <p className="hero-sub" style={{ marginBottom: '40px', maxWidth: '700px', margin: '0 auto 40px' }}>
                   {slide.subtitle}
                 </p>
 
-                <div className="row wrap hero-cta">
+                <div className="row wrap hero-cta" style={{ justifyContent: 'center', gap: '16px' }}>
                   <Magnet>
                     <Link className="btn lg primary glow" to="/send">
                       <GlareHover><span className="row" style={{ gap: 6 }}>Create payout<ArrowRight size={15} /></span></GlareHover>
