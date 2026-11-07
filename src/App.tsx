@@ -12,6 +12,7 @@ import { GooeyNav } from './components/bits';
 import { Landing } from './pages/landing';
 import { Explore } from './pages/explore';
 import { Send } from './pages/send';
+import { Pitch } from './pages/pitch';
 
 /* ------------------------------------------------------------------ theme */
 
@@ -175,6 +176,7 @@ function Routed() {
   return (
     <Routes location={location} key={location.pathname}>
       <Route path="/" element={<PublicShell><Landing /></PublicShell>} />
+      <Route path="/pitch" element={<Pitch />} />
       <Route path="/send" element={<PublicShell><Send /></PublicShell>} />
       <Route path="/explore" element={<PublicShell><Explore tab="payouts" /></PublicShell>} />
       <Route path="/explore/corridors" element={<PublicShell><Explore tab="corridors" /></PublicShell>} />
