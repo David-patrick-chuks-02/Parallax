@@ -1,22 +1,16 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import {
-  Link, NavLink, Navigate, Route, Routes, useLocation, useNavigate, useParams,
+  Link, NavLink, Navigate, Route, Routes, useLocation, useNavigate,
 } from 'react-router-dom';
 import { AnimatePresence, motion } from 'motion/react';
 import {
-  ArrowRight, Compass, FolderGit2, GitPullRequest, LayoutGrid, ListChecks, Menu, Moon,
-  Receipt, Settings, Sun, Wrench, X,
+  ArrowRight, Menu, Moon, Sun, X,
 } from 'lucide-react';
-import { Provider, useApp } from './lib/store';
-import { canOpenRepoDashboard, repoName, reposOwnedBy } from './lib/model';
-import { Avatar, Brand, EASE } from './components/ui';
+import { Provider } from './lib/store';
+import { Brand, EASE } from './components/ui';
 import { GooeyNav } from './components/bits';
 import { Landing } from './pages/landing';
 import { Explore } from './pages/explore';
-import { IssuePage } from './pages/issue';
-import { ContributorLogin, MaintainerLogin } from './pages/auth';
-import { ContributorWork, ContributorReceipts, ContributorSettings } from './pages/contributor';
-import { MaintainerHome, MaintainerSubmit, RepoDashboard, RepoIssues, RepoSettings } from './pages/maintainer';
 
 /* ------------------------------------------------------------------ theme */
 
@@ -79,7 +73,6 @@ function AnnounceBar() {
 }
 
 function PublicShell({ children }: { children: ReactNode }) {
-  const { state } = useApp();
   const location = useLocation();
   const [menu, setMenu] = useState(false);
   const [lifted, setLifted] = useState(false);
@@ -122,17 +115,6 @@ function PublicShell({ children }: { children: ReactNode }) {
           <div className="navpill-nav"><GooeyNav items={nav} /></div>
           <div className="navpill-right">
             <ThemeToggle />
-            <Link className="btn sm" to="/maintainer/login">Get Started</Link>
-            {state.session.contributor ? (
-              <Link className="btn sm navpill-cta" to="/me">
-                <Avatar name={state.session.contributor} />
-                <span className="hide-sm">{state.session.contributor}</span>
-              </Link>
-            ) : (
-              <Link className="btn sm navpill-cta" to={`/login?next=${encodeURIComponent(location.pathname)}`}>
-                Sign up
-              </Link>
-            )}
             <button className="btn ghost icon sm navpill-burger" aria-label="Open menu" onClick={() => setMenu(m => !m)}>
               {menu ? <X size={16} /> : <Menu size={16} />}
             </button>
@@ -155,7 +137,6 @@ function PublicShell({ children }: { children: ReactNode }) {
                     {n.label}
                   </NavLink>
                 ))}
-                <Link to="/maintainer/login">Get Started</Link>
               </div>
             </motion.nav>
           )}
@@ -167,174 +148,7 @@ function PublicShell({ children }: { children: ReactNode }) {
   );
 }
 
-/* ----------------------------------------------------------- workspace shell */
 
-interface NavEntry { to: string; label: string; icon: React.ElementType; end?: boolean; count?: number }
-
-function Rail({ title, sub, groups, open, onClose, footer }: {
-  title: string;
-  sub?: string;
-  groups: { heading: string; items: NavEntry[] }[];
-  open: boolean;
-  onClose: () => void;
-  footer?: ReactNode;
-}) {
-  return (
-    <aside className={open ? 'rail open' : 'rail'} aria-label="Workspace navigation">
-      <div className="rail-head">
-        <Brand to="/" />
-        <span className="spacer" />
-        <button className="btn ghost icon xs rail-close" aria-label="Close menu" onClick={onClose}>
-          <X size={14} />
-        </button>
-      </div>
-      <div className="rail-scope">
-        <p className="label">{title}</p>
-        {sub && <p className="rail-scope-sub">{sub}</p>}
-      </div>
-      <div className="rail-body">
-        {groups.map(g => (
-          <div className="rail-group" key={g.heading}>
-            <p className="label">{g.heading}</p>
-            {g.items.map(item => (
-              <NavLink key={item.to} to={item.to} end={item.end} onClick={onClose}
-                className={({ isActive }) => (isActive ? 'nav-item on' : 'nav-item')}>
-                {({ isActive }) => (
-                  <>
-                    {isActive && (
-                      <motion.span layoutId="nav-bg" className="nav-bg"
-                        transition={{ type: 'spring', stiffness: 460, damping: 38 }} />
-                    )}
-                    <item.icon />
-                    <span>{item.label}</span>
-                    {item.count !== undefined && <span className="nav-count">{item.count}</span>}
-                  </>
-                )}
-              </NavLink>
-            ))}
-          </div>
-        ))}
-      </div>
-      {footer && <div className="rail-foot">{footer}</div>}
-    </aside>
-  );
-}
-
-function WorkspaceShell({ title, sub, groups, footer, children }: {
-  title: string;
-  sub?: string;
-  groups: { heading: string; items: NavEntry[] }[];
-  footer?: ReactNode;
-  children: ReactNode;
-}) {
-  const [open, setOpen] = useState(false);
-  const location = useLocation();
-  useEffect(() => { setOpen(false); }, [location.pathname]);
-
-  return (
-    <div className="shell with-rail">
-      <Rail title={title} sub={sub} groups={groups} open={open} onClose={() => setOpen(false)} footer={footer} />
-      <AnimatePresence>
-        {open && (
-          <motion.button className="scrim" aria-label="Close menu" onClick={() => setOpen(false)}
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.15 }} />
-        )}
-      </AnimatePresence>
-      <header className="topbar">
-        <button className="btn ghost icon sm menu-btn" aria-label="Open menu" onClick={() => setOpen(true)}>
-          <Menu size={16} />
-        </button>
-        <span className="topbar-title">{sub ?? title}</span>
-        <span className="spacer" />
-        <ThemeToggle />
-      </header>
-      <main id="main" className="main">
-        <div className="main-inner">{children}</div>
-      </main>
-    </div>
-  );
-}
-
-/* --------------------------------------------------------- contributor area */
-
-function ContributorShell({ children }: { children: ReactNode }) {
-  const { state } = useApp();
-  const me = state.session.contributor;
-  const active = state.applications.filter(a => !a.applicant && ['Assigned', 'PR submitted'].includes(a.status)).length;
-  if (!me) return <Navigate to="/login?next=/me" replace />;
-  return (
-    <WorkspaceShell
-      title="Contributor"
-      sub={me}
-      groups={[{
-        heading: 'Your work',
-        items: [
-          { to: '/me', label: 'Assignments', icon: GitPullRequest, end: true, count: active },
-          { to: '/me/receipts', label: 'Receipts', icon: Receipt },
-          { to: '/me/settings', label: 'Settings', icon: Settings },
-        ],
-      }]}
-      footer={<Link className="btn ghost sm block" to="/explore"><Compass size={14} />Back to explore</Link>}
-    >
-      {children}
-    </WorkspaceShell>
-  );
-}
-
-/* ---------------------------------------------------------- maintainer area */
-
-function MaintainerShell({ children }: { children: ReactNode }) {
-  const { state } = useApp();
-  const me = state.session.maintainer;
-  if (!me) return <Navigate to="/maintainer/login" replace />;
-  const mine = reposOwnedBy(state.repos, me);
-  return (
-    <WorkspaceShell
-      title="Maintainer"
-      sub={me}
-      groups={[{
-        heading: 'Payments',
-        items: [
-          { to: '/maintainer', label: 'Your payments', icon: FolderGit2, end: true, count: mine.length },
-          { to: '/maintainer/submit', label: 'New payment', icon: LayoutGrid },
-        ],
-      }]}
-      footer={<Link className="btn ghost sm block" to="/">Leave maintainer area</Link>}
-    >
-      {children}
-    </WorkspaceShell>
-  );
-}
-
-/** Per-repo workspace. The gate lives here: wrong owner or not accepted never renders. */
-function RepoShell({ children }: { children: ReactNode }) {
-  const { state } = useApp();
-  const { repoId } = useParams();
-  const me = state.session.maintainer;
-  const repo = state.repos.find(r => r.id === repoId);
-
-  if (!me) return <Navigate to="/maintainer/login" replace />;
-  if (!canOpenRepoDashboard(repo, me)) return <Navigate to="/maintainer" replace />;
-
-  const open = state.issues.filter(i => i.repoId === repo!.id).length;
-  return (
-    <WorkspaceShell
-      title="Payment"
-      sub={repoName(repo!)}
-      groups={[{
-        heading: repo!.name,
-        items: [
-          { to: `/maintainer/repo/${repo!.id}`, label: 'Overview', icon: LayoutGrid, end: true },
-          { to: `/maintainer/repo/${repo!.id}/issues`, label: 'Issues & proposals', icon: ListChecks, count: open },
-          { to: `/maintainer/repo/${repo!.id}/settings`, label: 'Settings', icon: Settings },
-        ],
-      }]}
-      footer={<Link className="btn ghost sm block" to="/maintainer"><Wrench size={14} />All repositories</Link>}
-    >
-      {children}
-    </WorkspaceShell>
-  );
-}
 
 /* --------------------------------------------------------------------- app */
 
@@ -363,21 +177,6 @@ function Routed() {
       <Route path="/explore" element={<PublicShell><Explore tab="issues" /></PublicShell>} />
       <Route path="/explore/repos" element={<PublicShell><Explore tab="repos" /></PublicShell>} />
       <Route path="/explore/orgs" element={<PublicShell><Explore tab="orgs" /></PublicShell>} />
-      <Route path="/issue/:issueId" element={<PublicShell><IssuePage /></PublicShell>} />
-
-      <Route path="/login" element={<ContributorLogin />} />
-      <Route path="/maintainer/login" element={<MaintainerLogin />} />
-
-      <Route path="/me" element={<ContributorShell><ContributorWork /></ContributorShell>} />
-      <Route path="/me/receipts" element={<ContributorShell><ContributorReceipts /></ContributorShell>} />
-      <Route path="/me/settings" element={<ContributorShell><ContributorSettings /></ContributorShell>} />
-
-      <Route path="/maintainer" element={<MaintainerShell><MaintainerHome /></MaintainerShell>} />
-      <Route path="/maintainer/submit" element={<MaintainerShell><MaintainerSubmit /></MaintainerShell>} />
-      <Route path="/maintainer/repo/:repoId" element={<RepoShell><RepoDashboard /></RepoShell>} />
-      <Route path="/maintainer/repo/:repoId/issues" element={<RepoShell><RepoIssues /></RepoShell>} />
-      <Route path="/maintainer/repo/:repoId/settings" element={<RepoShell><RepoSettings /></RepoShell>} />
-
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
